@@ -69,26 +69,37 @@ test('un module inconnu affiche la page introuvable', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1, name: 'Page introuvable' })).toBeVisible();
 });
 
+/** Répond juste à la question affichée, à la souris, et attend la question suivante. */
+async function answerShownQuestion(page: Page): Promise<void> {
+  await field(page).fill(solutions.get((await prompt(page).textContent())!.trim())!);
+  await page.getByRole('button', { name: 'Valider', exact: true }).click();
+  await expect(page.getByText('Juste !')).toBeVisible();
+  await page.getByRole('button', { name: 'Suivant', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Suivant', exact: true })).toBeHidden();
+}
+
 for (const theme of ['light', 'dark'] as const) {
   test(`axe sur chaque état de l’entraînement (${theme})`, async ({ page }) => {
     await startPractice(page, theme);
     await expectNoAxeViolations(page);
 
-    await answer(page, 'zzz');
+    await field(page).fill('zzz');
+    await page.getByRole('button', { name: 'Valider', exact: true }).click();
     await expect(page.getByText('Pas tout à fait')).toBeVisible();
     await expectNoAxeViolations(page);
-    await goNext(page);
+    await page.getByRole('button', { name: 'Suivant', exact: true }).click();
 
-    await answer(page, solutions.get((await prompt(page).textContent())!.trim())!);
+    await field(page).fill(solutions.get((await prompt(page).textContent())!.trim())!);
+    await page.getByRole('button', { name: 'Valider', exact: true }).click();
     await expect(page.getByText('Juste !')).toBeVisible();
     await expectNoAxeViolations(page);
-    await goNext(page);
+    await page.getByRole('button', { name: 'Suivant', exact: true }).click();
 
-    while (await field(page).isVisible()) {
-      await answer(page, solutions.get((await prompt(page).textContent())!.trim())!);
-      await goNext(page);
+    const done = page.getByRole('heading', { name: 'Série terminée' });
+    for (let guard = 0; guard < 20 && !(await done.isVisible()); guard++) {
+      await answerShownQuestion(page);
     }
-    await expect(page.getByRole('heading', { name: 'Série terminée' })).toBeVisible();
+    await expect(done).toBeVisible();
     await expectNoAxeViolations(page);
   });
 }
