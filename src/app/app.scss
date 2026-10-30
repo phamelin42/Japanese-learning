@@ -1,0 +1,14 @@
+.app-accueil {
+  display: block;
+  padding: var(--space-8) var(--space-4);
+}
+
+.app-accueil__titre {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-display);
+}
+
+.app-accueil__texte {
+  margin: 0;
+  color: var(--ink-muted);
+}
