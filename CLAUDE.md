@@ -36,7 +36,7 @@ Révision par **modules** (vocabulaire ou leçon), mobile d'abord : Phil colle s
 
 ## Pièges
 
-- **e2e et pré-rendu** : le `<h1>` est dans le HTML avant qu'Angular ne s'hydrate. `openPage` (`e2e/helpers.ts`) attend `html[data-app-ready]` ; une interaction sans cette attente se perd en CI (plus lente). Après une action, attendre son effet (attribut, `localStorage`, disparition de « Suivant ») avant de recharger ou de lire l'écran suivant.
+- **e2e et pré-rendu** : le `<h1>` est dans le HTML avant qu'Angular ne s'hydrate. `openPage` (`e2e/helpers.ts`) attend `html[data-app-ready]`, posé quand l'application est stable (page paresseuse chargée et hydratée, pas au premier rendu de la coquille) ; une interaction sans cette attente se perd en CI (plus lente). Après une action, attendre son effet (attribut, `localStorage`, disparition de « Suivant ») avant de recharger ou de lire l'écran suivant.
 - Les échappements `\uXXXX` écrits par l'outil d'édition deviennent des caractères littéraux : construire les plages Unicode avec `String.fromCodePoint` (voir `content/kana.ts`).
 
 ## Écarts au contexte commun

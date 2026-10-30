@@ -1,5 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ApplicationRef, PendingTasks } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { App } from './app';
@@ -40,6 +41,21 @@ describe('App', () => {
   it('signale sur <html> que l’application est hydratée et prête', async () => {
     document.documentElement.removeAttribute('data-app-ready');
     await render();
+    expect(document.documentElement.hasAttribute('data-app-ready')).toBe(true);
+  });
+
+  it('ne se dit prête qu’une fois la page chargée et hydratée (application stable)', async () => {
+    document.documentElement.removeAttribute('data-app-ready');
+    // Une route paresseuse en cours de chargement est une tâche en attente.
+    const done = TestBed.inject(PendingTasks).add();
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.documentElement.hasAttribute('data-app-ready')).toBe(false);
+
+    done();
+    await TestBed.inject(ApplicationRef).whenStable();
+    await Promise.resolve();
     expect(document.documentElement.hasAttribute('data-app-ready')).toBe(true);
   });
 });

@@ -1,4 +1,11 @@
-import { afterNextRender, Component, DOCUMENT, inject, ViewEncapsulation } from '@angular/core';
+import {
+  afterNextRender,
+  ApplicationRef,
+  Component,
+  DOCUMENT,
+  inject,
+  ViewEncapsulation,
+} from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { ProgressSync } from './progress/progress-sync';
 import { SITE_NAME } from './seo/page-title-strategy';
@@ -17,10 +24,12 @@ export class App {
   constructor() {
     const root = inject(DOCUMENT).documentElement;
     const sync = inject(ProgressSync);
+    const appRef = inject(ApplicationRef);
     afterNextRender(() => {
-      // Fin de l'hydratation : avant, un clic n'est que rejoué. Les e2e attendent ce signal.
-      root.setAttribute('data-app-ready', '');
       sync.start();
+      // Prête quand la page (chargée à la demande) est hydratée : avant, un toucher n'est que
+      // rejoué. Les e2e attendent ce signal pour interagir.
+      void appRef.whenStable().then(() => root.setAttribute('data-app-ready', ''));
     });
   }
 }
