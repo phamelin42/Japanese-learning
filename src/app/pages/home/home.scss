@@ -1,3 +1,27 @@
 app-home-page {
   display: block;
 }
+
+.app-home__filter {
+  display: block;
+  margin-block-end: var(--space-6);
+
+  // Le mode horizontal de Fuda est une grille en colonnes qui déborde à 320 px : on le laisse
+  // passer à la ligne (à corriger dans Fuda).
+  .fd-radio-group--horizontal {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.app-module-list {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-module-list__none {
+  color: var(--ink-muted);
+}
