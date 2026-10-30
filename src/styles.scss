@@ -1,0 +1,10 @@
+// Fuda (tokens et fondations) est déclaré dans angular.json, avant ce fichier : le paquet
+// n'exporte pas ses styles, un @import d'ici ne se résout pas.
+
+// Ce site affiche du japonais : on charge aussi les sous-ensembles japonais (fonts.css de Fuda).
+@import '@fontsource/dela-gothic-one/latin-400.css';
+@import '@fontsource/dela-gothic-one/japanese-400.css';
+@import '@fontsource/zen-maru-gothic/latin-500.css';
+@import '@fontsource/zen-maru-gothic/latin-700.css';
+@import '@fontsource/zen-maru-gothic/japanese-500.css';
+@import '@fontsource/zen-maru-gothic/japanese-700.css';
