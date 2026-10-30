@@ -1,0 +1,82 @@
+@let m = module();
+
+<p class="app-practice__back">
+  <a class="app-practice__back-link" [routerLink]="['/module', m.id]">{{ m.title }}</a>
+</p>
+<h1 class="app-page__title title-1">Entraînement</h1>
+
+@if (!ready()) {
+  <p class="app-page__lead">Préparation des questions…</p>
+} @else if (session.current(); as q) {
+  <fd-progress
+    class="app-practice__progress"
+    label="Progression"
+    [value]="progress()"
+    [valueText]="done() + ' sur ' + session.firstTryScore().total"
+  />
+
+  <section class="app-practice__card" aria-labelledby="consigne">
+    <h2 id="consigne" class="app-practice__instruction label">
+      {{ q.answerLang === 'ja' ? 'Écris en japonais' : 'Écris en français' }}
+    </h2>
+    <p class="app-practice__prompt title-1" [attr.lang]="q.promptLang">{{ q.prompt }}</p>
+    @if (q.promptReading) {
+      <p class="app-practice__reading" lang="ja">{{ q.promptReading }}</p>
+    }
+  </section>
+
+  <form
+    class="app-practice__form"
+    autocomplete="off"
+    autocapitalize="off"
+    spellcheck="false"
+    (submit)="onSubmit($event)"
+  >
+    <fd-text-field [formField]="answerForm.answer" label="Ta réponse" [attr.lang]="q.answerLang" />
+    @if (!answered()) {
+      <button fdButton variant="primary" type="submit" block>Valider</button>
+    }
+  </form>
+
+  <div class="app-practice__verdict" aria-live="polite">
+    @if (answered()) {
+      @let right = session.status() === 'right';
+      <p class="app-practice__verdict-title" [class.app-practice__verdict-title--wrong]="!right">
+        <svg [fdIcon]="right ? 'check' : 'close'"></svg>
+        {{ right ? 'Juste !' : 'Pas tout à fait' }}
+      </p>
+      @if (!right) {
+        <p>Ta réponse : {{ session.lastInput() }}</p>
+      }
+      <p>
+        Réponse : <span [attr.lang]="q.answerLang">{{ q.expected }}</span>
+        @if (q.expectedReading) {
+          (<span lang="ja">{{ q.expectedReading }}</span
+          >)
+        }
+      </p>
+      @if (q.explanation) {
+        <p class="app-practice__explanation">{{ q.explanation }}</p>
+      }
+    }
+  </div>
+
+  @if (answered()) {
+    <button #nextButton fdButton variant="secondary" type="button" block (click)="next()">
+      Suivant
+    </button>
+  }
+} @else {
+  <section class="app-practice__done" aria-labelledby="fin">
+    <h2 id="fin" #doneHeading class="title-2" tabindex="-1">Série terminée</h2>
+    <p class="app-page__lead">
+      {{ session.firstTryScore().right }} sur {{ session.firstTryScore().total }} du premier coup
+    </p>
+    <div class="app-practice__actions">
+      <button fdButton variant="primary" type="button" block (click)="restart()">
+        Recommencer
+      </button>
+      <a fdButton variant="secondary" block [routerLink]="['/module', m.id]">Retour au module</a>
+    </div>
+  </section>
+}

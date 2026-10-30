@@ -17,14 +17,14 @@
   <ul class="app-module-list">
     @for (module of modules(); track module.id) {
       <li>
-        <article fdCard [sky]="module.sky">
+        <a fdCard [sky]="module.sky" [routerLink]="['/module', module.id]">
           <fd-badge slot="badge" tone="sakura" soft>{{ module.kindLabel }}</fd-badge>
           <span slot="title">{{ module.title }}</span>
           <span slot="meta">
             Cours du <time [attr.datetime]="module.lessonDate">{{ module.dateLabel }}</time>
           </span>
           {{ module.summary }}
-        </article>
+        </a>
       </li>
     } @empty {
       <li class="app-module-list__none">Aucun module de ce type pour l’instant.</li>

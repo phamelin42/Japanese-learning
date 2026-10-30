@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { ModuleEntry, StudyModule } from '../../content/module.model';
 import { MODULE_INDEX } from '../../content/module-index';
 import { HomePage } from './home';
@@ -22,7 +23,9 @@ const entries = [
 
 describe('HomePage', () => {
   async function render(index: readonly ModuleEntry[] = entries) {
-    TestBed.configureTestingModule({ providers: [{ provide: MODULE_INDEX, useValue: index }] });
+    TestBed.configureTestingModule({
+      providers: [provideRouter([]), { provide: MODULE_INDEX, useValue: index }],
+    });
     const fixture = TestBed.createComponent(HomePage);
     await fixture.whenStable();
     const el = fixture.nativeElement as HTMLElement;
@@ -45,11 +48,17 @@ describe('HomePage', () => {
 
   it('montre le type, la date du cours et le résumé de chaque module', async () => {
     const { el } = await render();
-    const card = el.querySelector('.app-module-list article')!;
+    const card = el.querySelector('.app-module-list a')!;
     expect(card.querySelector('fd-badge')?.textContent?.trim()).toBe('Vocabulaire');
     expect(card.querySelector('time')?.getAttribute('datetime')).toBe('2026-10-28');
     expect(card.querySelector('time')?.textContent?.trim()).toBe('28 octobre 2026');
     expect(card.textContent).toContain('Résumé recent');
+  });
+
+  it('mène à la page de chaque module', async () => {
+    const { el } = await render();
+    const hrefs = [...el.querySelectorAll('.app-module-list a')].map((a) => a.getAttribute('href'));
+    expect(hrefs).toEqual(['/module/recent', '/module/particules', '/module/ancien']);
   });
 
   it('filtre par type de module', async () => {

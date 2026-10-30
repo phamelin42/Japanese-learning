@@ -1,0 +1,63 @@
+@let m = module();
+
+<p class="app-module__kicker">
+  <fd-badge tone="sakura" soft>{{ kindLabel() }}</fd-badge>
+  Cours du <time [attr.datetime]="m.lessonDate">{{ dateLabel() }}</time>
+</p>
+<h1 class="app-page__title title-1">{{ m.title }}</h1>
+<p class="app-page__lead">{{ m.summary }}</p>
+
+<div class="app-module__start">
+  <a fdButton variant="primary" block [routerLink]="['/module', m.id, 'entrainement']">
+    S’entraîner
+  </a>
+  <p class="app-module__count">{{ questionCount() }} questions</p>
+</div>
+
+@for (section of m.sheet ?? []; track section.heading) {
+  <section class="app-module__section">
+    <h2 class="title-2">{{ section.heading }}</h2>
+    @for (paragraph of section.paragraphs; track $index) {
+      <p>{{ paragraph }}</p>
+    }
+    @if (section.examples?.length) {
+      <ul class="app-module__examples">
+        @for (example of section.examples; track example.ja) {
+          <li>
+            <span class="app-module__ja body-lg" lang="ja">{{ example.ja }}</span>
+            @if (example.kana) {
+              <span class="app-module__kana" lang="ja">{{ example.kana }}</span>
+            }
+            <span class="app-module__fr">{{ example.fr }}</span>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+}
+
+@if (m.vocabulary?.length) {
+  <section class="app-module__section">
+    <h2 class="title-2">Vocabulaire</h2>
+    <div class="app-vocabulary__scroll">
+      <table class="app-vocabulary">
+        <thead>
+          <tr>
+            <th scope="col">Français</th>
+            <th scope="col">Japonais</th>
+            <th scope="col">Lecture</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (word of m.vocabulary; track word.id) {
+            <tr>
+              <td>{{ word.fr }}</td>
+              <td lang="ja">{{ word.kanji ?? word.kana }}</td>
+              <td lang="ja">{{ word.kanji ? word.kana : '' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+}
