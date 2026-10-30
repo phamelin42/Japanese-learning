@@ -58,6 +58,9 @@ export function validateModule(module: StudyModule): string[] {
     if (new Set(exercise.answers).size !== exercise.answers.length) {
       errors.push(`${where} : réponse en double`);
     }
+    if (exercise.answerLang === 'ja' && !exercise.answers.some((answer) => isKana(answer))) {
+      errors.push(`${where} : aucune réponse en kana (le rōmaji ne pourrait jamais être accepté)`);
+    }
   }
 
   for (const section of module.sheet ?? []) {
