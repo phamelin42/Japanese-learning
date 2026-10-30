@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal, ViewEncapsulation } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FdBadge, FdCard, FdEmptyState, FdRadioGroup, FdRadioOption } from '@phamelin/fuda';
 import {
   formatLessonDate,
@@ -11,7 +12,7 @@ type KindFilter = 'tous' | 'vocabulaire' | 'lecon';
 
 @Component({
   selector: 'app-home-page',
-  imports: [FdBadge, FdCard, FdEmptyState, FdRadioGroup],
+  imports: [RouterLink, FdBadge, FdCard, FdEmptyState, FdRadioGroup],
   templateUrl: './home.html',
   styleUrl: './home.scss',
   encapsulation: ViewEncapsulation.None,
