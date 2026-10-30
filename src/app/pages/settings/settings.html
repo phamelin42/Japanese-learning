@@ -1,0 +1,6 @@
+<h1 class="app-page__title title-1">Réglages</h1>
+
+<section class="app-settings__section" aria-labelledby="reglages-affichage">
+  <h2 id="reglages-affichage" class="app-settings__heading title-2">Affichage</h2>
+  <fd-switch [checked]="isDark()" (checkedChange)="setDark($event)">Thème Nuit</fd-switch>
+</section>

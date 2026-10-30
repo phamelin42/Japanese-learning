@@ -8,5 +8,6 @@ Angular 22 et le design system [Fuda](https://github.com/phamelin42/design-syste
 npm ci
 npm start      # serveur de développement
 npm test       # tests unitaires
-npm run build  # build de production
+npm run build  # pré-rendu de production
+npm run e2e    # Playwright + axe sur le build
 ```
