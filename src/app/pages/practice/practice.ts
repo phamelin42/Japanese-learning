@@ -18,6 +18,7 @@ import { FdButton, FdIcon, FdProgress, FdTextField } from '@phamelin/fuda';
 import { StudyModule } from '../../content/module.model';
 import { buildQuestions } from '../../practice/build-questions';
 import { PracticeSession } from '../../practice/practice-session';
+import { ProgressStore } from '../../progress/progress-store';
 
 @Component({
   selector: 'app-practice-page',
@@ -31,6 +32,7 @@ export class PracticePage {
   readonly module = input.required<StudyModule>();
 
   protected readonly session = inject(PracticeSession);
+  private readonly store = inject(ProgressStore);
   private readonly injector = inject(Injector);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -46,6 +48,9 @@ export class PracticePage {
     return status === 'right' || status === 'wrong';
   });
   protected readonly done = computed(() => this.total() - this.session.remaining());
+  protected readonly isDone = computed(
+    () => this.store.progress().modules[this.module().id]?.done === true,
+  );
   protected readonly progress = computed(() =>
     this.total() === 0 ? 0 : Math.round((this.done() / this.total()) * 100),
   );
@@ -75,11 +80,18 @@ export class PracticePage {
   protected next(): void {
     this.session.next();
     this.answerModel.set({ answer: '' });
+    if (this.session.status() === 'done') {
+      this.store.recordSession(this.module().id, this.session.firstTryScore());
+    }
     this.afterRender(() =>
       this.session.status() === 'done'
         ? this.doneHeading()?.nativeElement.focus()
         : this.focusField(),
     );
+  }
+
+  protected markDone(): void {
+    this.store.setDone(this.module().id, true);
   }
 
   protected restart(): void {

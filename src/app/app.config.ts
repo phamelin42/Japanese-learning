@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideClientHydration } from '@angular/platform-browser';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import {
   provideRouter,
   TitleStrategy,
@@ -17,7 +17,8 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
     ),
-    provideClientHydration(),
+    // Un toucher reçu avant la fin de l'hydratation est rejoué au lieu d'être perdu.
+    provideClientHydration(withEventReplay()),
     { provide: TitleStrategy, useClass: PageTitleStrategy },
   ],
 };

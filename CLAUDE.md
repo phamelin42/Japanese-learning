@@ -31,6 +31,11 @@ Révision par **modules** (vocabulaire ou leçon), mobile d'abord : Phil colle s
 - Pré-rendu : chaque route est déclarée dans `app.routes.server.ts` ; une route sans pré-rendu n'a ni HTML lisible sans JavaScript ni place au sitemap.
 - `src/styles.scss` : polices de Fuda, **avec** les sous-ensembles japonais (le site affiche du japonais). Les styles de Fuda sont déclarés dans `angular.json`.
 
+## Pièges
+
+- **e2e et pré-rendu** : le `<h1>` est dans le HTML avant qu'Angular ne s'hydrate. `openPage` (`e2e/helpers.ts`) attend `html[data-app-ready]` ; une interaction sans cette attente se perd en CI (plus lente). Après une action, attendre son effet (attribut, `localStorage`, disparition de « Suivant ») avant de recharger ou de lire l'écran suivant.
+- Les échappements `\uXXXX` écrits par l'outil d'édition deviennent des caractères littéraux : construire les plages Unicode avec `String.fromCodePoint` (voir `content/kana.ts`).
+
 ## Écarts au contexte commun
 
 - Polices : latin **et** japonais (Dela Gothic One 400, Zen Maru Gothic 500 et 700), contrairement aux sites qui n'affichent pas de japonais.

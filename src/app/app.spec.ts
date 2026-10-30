@@ -34,4 +34,10 @@ describe('App', () => {
       ['Réglages', '/reglages'],
     ]);
   });
+
+  it('signale sur <html> que l’application est hydratée et prête', async () => {
+    document.documentElement.removeAttribute('data-app-ready');
+    await render();
+    expect(document.documentElement.hasAttribute('data-app-ready')).toBe(true);
+  });
 });
