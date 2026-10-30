@@ -69,13 +69,18 @@ test('un module inconnu affiche la page introuvable', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1, name: 'Page introuvable' })).toBeVisible();
 });
 
-/** Répond juste à la question affichée, à la souris, et attend la question suivante. */
+/** « Suivant » à la souris, puis attente que la question suivante (ou la fin) soit affichée. */
+async function clickNext(page: Page): Promise<void> {
+  const next = page.getByRole('button', { name: 'Suivant', exact: true });
+  await next.click();
+  await expect(next).toBeHidden();
+}
+
+/** Répond juste à la question affichée, à la souris. */
 async function answerShownQuestion(page: Page): Promise<void> {
   await field(page).fill(solutions.get((await prompt(page).textContent())!.trim())!);
   await page.getByRole('button', { name: 'Valider', exact: true }).click();
   await expect(page.getByText('Juste !')).toBeVisible();
-  await page.getByRole('button', { name: 'Suivant', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Suivant', exact: true })).toBeHidden();
 }
 
 for (const theme of ['light', 'dark'] as const) {
@@ -87,17 +92,16 @@ for (const theme of ['light', 'dark'] as const) {
     await page.getByRole('button', { name: 'Valider', exact: true }).click();
     await expect(page.getByText('Pas tout à fait')).toBeVisible();
     await expectNoAxeViolations(page);
-    await page.getByRole('button', { name: 'Suivant', exact: true }).click();
+    await clickNext(page);
 
-    await field(page).fill(solutions.get((await prompt(page).textContent())!.trim())!);
-    await page.getByRole('button', { name: 'Valider', exact: true }).click();
-    await expect(page.getByText('Juste !')).toBeVisible();
+    await answerShownQuestion(page);
     await expectNoAxeViolations(page);
-    await page.getByRole('button', { name: 'Suivant', exact: true }).click();
+    await clickNext(page);
 
     const done = page.getByRole('heading', { name: 'Série terminée' });
     for (let guard = 0; guard < 20 && !(await done.isVisible()); guard++) {
       await answerShownQuestion(page);
+      await clickNext(page);
     }
     await expect(done).toBeVisible();
     await expectNoAxeViolations(page);
