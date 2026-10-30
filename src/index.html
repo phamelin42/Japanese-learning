@@ -4,11 +4,22 @@
     <meta charset="utf-8" />
     <title>Apprendre le japonais</title>
     <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta
       name="description"
-      content="Application pour travailler mes points faibles en japonais."
+      content="Réviser le vocabulaire et les points faibles de mes cours de japonais, module par module."
     />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon.ico" sizes="48x48" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <!-- Rétablit le thème choisi avant le premier rendu (même clé que FdThemeService) : pas de flash. -->
+    <script>
+      try {
+        if (localStorage.getItem('fuda-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch {}
+    </script>
   </head>
   <body>
     <app-root></app-root>

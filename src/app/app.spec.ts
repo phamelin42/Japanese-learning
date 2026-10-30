@@ -1,15 +1,37 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [App] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideRouter([])],
+    }).compileComponents();
   });
 
-  it('affiche le titre de la page', async () => {
+  async function render(): Promise<HTMLElement> {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
-    const h1 = (fixture.nativeElement as HTMLElement).querySelector('h1');
-    expect(h1?.textContent).toContain('Apprendre le japonais');
+    return fixture.nativeElement as HTMLElement;
+  }
+
+  it('propose un lien d’évitement vers le contenu principal', async () => {
+    const el = await render();
+    const skip = el.querySelector('a.app-skip');
+    expect(skip?.getAttribute('href')).toBe('#contenu');
+    expect(el.querySelector('main#contenu')).not.toBeNull();
+  });
+
+  it('relie l’accueil et les réglages depuis l’en-tête', async () => {
+    const el = await render();
+    const links = [...el.querySelectorAll('header a')].map((a) => [
+      a.textContent?.trim(),
+      a.getAttribute('href'),
+    ]);
+    expect(links).toEqual([
+      ['Apprendre le japonais', '/'],
+      ['Réglages', '/reglages'],
+    ]);
   });
 });

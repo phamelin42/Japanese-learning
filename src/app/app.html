@@ -1,6 +1,12 @@
-<main class="app-accueil">
-  <h1 class="app-accueil__titre">Apprendre le japonais</h1>
-  <p class="app-accueil__texte">Travailler mes points faibles, un à la fois.</p>
-</main>
+<a class="app-skip" href="#contenu">Aller au contenu</a>
 
-<router-outlet />
+<header class="app-header">
+  <a class="app-header__brand" routerLink="/">{{ siteName }}</a>
+  <nav class="app-header__nav" aria-label="Navigation principale">
+    <a class="app-header__link" routerLink="/reglages">Réglages</a>
+  </nav>
+</header>
+
+<main id="contenu" class="app-main" tabindex="-1">
+  <router-outlet />
+</main>

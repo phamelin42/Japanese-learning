@@ -6,26 +6,29 @@ Règles communes à tous les projets de Phil (copie de `phamelin42/claude-contex
 
 Application web pour que Phil travaille ses points faibles en japonais. Domaine : `japanese-learning.phamelin.fr`.
 
-Révision par **modules** (vocabulaire ou leçon), mobile d'abord : Phil colle ses notes de cours, l'agent les transforme en modules (contenu dans le dépôt, relu en PR), Phil s'entraîne en écrivant les réponses et marque lui-même un module terminé. Produit et décisions validées : `docs/PLAN.md` ; progression synchronisée par Vercel + Upstash Redis : `docs/adr-001-progression-synchronisee.md` ; tâches : `docs/superpowers/plans/2026-10-30-revision-par-modules.md`, à suivre dans l'ordre, une PR par tâche. Le code ne commence qu'une fois ce plan validé par Phil.
+Révision par **modules** (vocabulaire ou leçon), mobile d'abord : Phil colle ses notes de cours, l'agent les transforme en modules (contenu dans le dépôt, relu en PR), Phil s'entraîne en écrivant les réponses et marque lui-même un module terminé. Produit et décisions validées : `docs/PLAN.md` ; progression synchronisée par Vercel + Upstash Redis : `docs/adr-001-progression-synchronisee.md` ; tâches : `docs/superpowers/plans/2026-10-30-revision-par-modules.md`, à suivre dans l'ordre, une PR par tâche. Plan validé par Phil le 30/10/2026.
 
 - Saisie japonaise en kana **ou** rōmaji (kanji accepté s'il est dans la fiche) ; questions dans les deux sens, mélangées.
 - Les `id` de modules, de mots et d'exercices ne se renomment jamais : la progression s'y rattache.
 
 ## Commandes
 
-| Commande                             | Rôle                                                   |
-| ------------------------------------ | ------------------------------------------------------ |
-| `npm start`                          | Serveur de développement                               |
-| `npm test`                           | Tests unitaires (Vitest via `ng test`)                 |
-| `npm run lint` / `npm run typecheck` | ESLint (angular-eslint) / tsc sur l'appli et les specs |
-| `npm run build`                      | Build de production (`dist/japanese-learning/browser`) |
-| `npm run format` / `format:check`    | Prettier                                               |
+| Commande                             | Rôle                                                                                                          |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| `npm start`                          | Serveur de développement                                                                                      |
+| `npm test`                           | Tests unitaires (Vitest via `ng test`)                                                                        |
+| `npm run lint` / `npm run typecheck` | ESLint (angular-eslint) / tsc sur l'appli et les specs                                                        |
+| `npm run build`                      | Pré-rendu statique (`dist/japanese-learning/browser`), puis `tools/postbuild.mjs` (`404.html`, `sitemap.xml`) |
+| `npm run e2e`                        | Playwright sur le build : axe Jour/Nuit, reflow 320 px, clavier, 404, sitemap                                 |
+| `npm run format` / `format:check`    | Prettier                                                                                                      |
 
-Pas encore d'e2e (Playwright, axe) ni de mesure d'audience : à ajouter avec la première page réelle.
+`e2e` en session cloud : `PW_CHROMIUM=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome npm run e2e` (serveur sur `E2E_PORT`, 4310 par défaut, jamais réutilisé). Pas encore de mesure d'audience : le site doit d'abord être enregistré dans Umami.
 
 ## Structure
 
-- `src/app/` : l'application (pour l'instant la seule page d'accueil).
+- `src/app/` : coquille (`app.*`), `pages/<page>/` (une route paresseuse chacune), `seo/` (titre, description, canonique et `noindex` lus dans les `data` des routes).
+- `e2e/` : `routes.ts` liste les chemins audités par axe et le reflow ; toute nouvelle page ou tout nouvel état s'y ajoute.
+- Pré-rendu : chaque route est déclarée dans `app.routes.server.ts` ; une route sans pré-rendu n'a ni HTML lisible sans JavaScript ni place au sitemap.
 - `src/styles.scss` : polices de Fuda, **avec** les sous-ensembles japonais (le site affiche du japonais). Les styles de Fuda sont déclarés dans `angular.json`.
 
 ## Écarts au contexte commun
