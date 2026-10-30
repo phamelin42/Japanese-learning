@@ -2,9 +2,14 @@ app-home-page {
   display: block;
 }
 
+.app-home__filters {
+  display: grid;
+  gap: var(--space-4);
+  margin-block-end: var(--space-6);
+}
+
 .app-home__filter {
   display: block;
-  margin-block-end: var(--space-6);
 
   // Le mode horizontal de Fuda est une grille en colonnes qui déborde à 320 px : on le laisse
   // passer à la ligne (à corriger dans Fuda).
@@ -24,4 +29,8 @@ app-home-page {
 
 .app-module-list__none {
   color: var(--ink-muted);
+}
+
+.app-module-list__done {
+  margin-inline-start: var(--space-2);
 }

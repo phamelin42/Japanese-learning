@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { ModuleEntry, StudyModule } from '../../content/module.model';
 import { MODULE_INDEX } from '../../content/module-index';
+import { ProgressStore } from '../../progress/progress-store';
 import { HomePage } from './home';
 
 function entry(id: string, kind: ModuleEntry['kind'], lessonDate: string): ModuleEntry {
@@ -22,6 +23,8 @@ const entries = [
 ];
 
 describe('HomePage', () => {
+  beforeEach(() => localStorage.clear());
+
   async function render(index: readonly ModuleEntry[] = entries) {
     TestBed.configureTestingModule({
       providers: [provideRouter([]), { provide: MODULE_INDEX, useValue: index }],
@@ -31,7 +34,11 @@ describe('HomePage', () => {
     const el = fixture.nativeElement as HTMLElement;
     const titles = () =>
       [...el.querySelectorAll('.app-module-list [slot="title"]')].map((t) => t.textContent?.trim());
-    return { fixture, el, titles };
+    const radio = (label: string) =>
+      [...el.querySelectorAll<HTMLInputElement>('fd-radio-group input')].find(
+        (input) => input.closest('label')?.textContent?.trim() === label,
+      )!;
+    return { fixture, el, titles, radio };
   }
 
   it('a un seul titre de niveau 1', async () => {
@@ -62,11 +69,7 @@ describe('HomePage', () => {
   });
 
   it('filtre par type de module', async () => {
-    const { fixture, el, titles } = await render();
-    const radio = (label: string) =>
-      [...el.querySelectorAll<HTMLInputElement>('fd-radio-group input')].find(
-        (input) => input.closest('label')?.textContent?.trim() === label,
-      )!;
+    const { fixture, titles, radio } = await render();
 
     radio('Leçons').click();
     await fixture.whenStable();
@@ -85,5 +88,31 @@ describe('HomePage', () => {
     const { el } = await render([]);
     expect(el.querySelector('fd-empty-state')).not.toBeNull();
     expect(el.querySelector('fd-radio-group')).toBeNull();
+  });
+
+  it('signale les modules terminés en texte', async () => {
+    const { fixture, el } = await render();
+    TestBed.inject(ProgressStore).setDone('particules', true);
+    await fixture.whenStable();
+    const cards = [...el.querySelectorAll('.app-module-list a')];
+    expect(cards.map((card) => card.textContent?.includes('Terminé'))).toEqual([
+      false,
+      true,
+      false,
+    ]);
+  });
+
+  it('filtre les modules à faire et les modules terminés', async () => {
+    const { fixture, titles, radio } = await render();
+    TestBed.inject(ProgressStore).setDone('particules', true);
+    await fixture.whenStable();
+
+    radio('Terminés').click();
+    await fixture.whenStable();
+    expect(titles()).toEqual(['Titre particules']);
+
+    radio('À faire').click();
+    await fixture.whenStable();
+    expect(titles()).toEqual(['Titre recent', 'Titre ancien']);
   });
 });

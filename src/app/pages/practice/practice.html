@@ -72,10 +72,21 @@
     <p class="app-page__lead">
       {{ session.firstTryScore().right }} sur {{ session.firstTryScore().total }} du premier coup
     </p>
+    @if (isDone()) {
+      <p class="app-practice__done-state">
+        <svg fdIcon="check"></svg>
+        Module terminé
+      </p>
+    }
     <div class="app-practice__actions">
       <button fdButton variant="primary" type="button" block (click)="restart()">
         Recommencer
       </button>
+      @if (!isDone()) {
+        <button fdButton variant="secondary" type="button" block (click)="markDone()">
+          Marquer comme terminé
+        </button>
+      }
       <a fdButton variant="secondary" block [routerLink]="['/module', m.id]">Retour au module</a>
     </div>
   </section>

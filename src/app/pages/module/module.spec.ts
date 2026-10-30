@@ -1,9 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import jours from '../../content/modules/jours-de-la-semaine';
+import { ProgressStore } from '../../progress/progress-store';
 import { ModulePage } from './module';
 
 describe('ModulePage', () => {
+  beforeEach(() => localStorage.clear());
+
   async function render(): Promise<HTMLElement> {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(ModulePage);
@@ -40,5 +43,19 @@ describe('ModulePage', () => {
     const link = [...el.querySelectorAll('a')].find((a) => a.textContent?.includes('S’entraîner'));
     expect(link?.getAttribute('href')).toBe('/module/jours-de-la-semaine/entrainement');
     expect(el.textContent).toContain('16 questions');
+  });
+
+  it('marque le module terminé, puis le rouvre, avec l’interrupteur', async () => {
+    const el = await render();
+    const toggle = el.querySelector<HTMLInputElement>('fd-switch input')!;
+    const store = TestBed.inject(ProgressStore);
+    expect(toggle.closest('fd-switch')?.textContent).toContain('Module terminé');
+
+    toggle.click();
+    await Promise.resolve();
+    expect(store.moduleProgress('jours-de-la-semaine')()?.done).toBe(true);
+
+    toggle.click();
+    expect(store.moduleProgress('jours-de-la-semaine')()?.done).toBe(false);
   });
 });

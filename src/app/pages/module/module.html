@@ -12,6 +12,9 @@
     S’entraîner
   </a>
   <p class="app-module__count">{{ questionCount() }} questions</p>
+  <fd-switch class="app-module__done" [checked]="isDone()" (checkedChange)="setDone($event)">
+    Module terminé
+  </fd-switch>
 </div>
 
 @for (section of m.sheet ?? []; track section.heading) {

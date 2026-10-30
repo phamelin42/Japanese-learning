@@ -15,6 +15,12 @@ app-module-page {
   margin-block-end: var(--space-8);
 }
 
+.app-module__done {
+  display: flex;
+  justify-content: center;
+  margin-block-start: var(--space-4);
+}
+
 .app-module__count {
   margin: var(--space-2) 0 0;
   color: var(--ink-muted);

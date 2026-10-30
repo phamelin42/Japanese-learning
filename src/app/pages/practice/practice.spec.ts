@@ -1,10 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import jours from '../../content/modules/jours-de-la-semaine';
+import { ProgressStore } from '../../progress/progress-store';
 import { RANDOM } from '../../random';
 import { PracticePage } from './practice';
 
 describe('PracticePage', () => {
+  beforeEach(() => localStorage.clear());
+
   async function render() {
     TestBed.configureTestingModule({
       // Sans mélange : la série suit l'ordre de buildQuestions (lundi fr → ja, lundi ja → fr…).
@@ -118,5 +121,35 @@ describe('PracticePage', () => {
     await fixture.whenStable();
     expect(el.textContent).not.toContain('Série terminée');
     expect(prompt()).toBe('lundi');
+  });
+
+  async function finish(page: Awaited<ReturnType<typeof render>>): Promise<void> {
+    for (const word of jours.vocabulary!) {
+      await page.answer(word.kana);
+      await page.next();
+      await page.answer(word.fr);
+      await page.next();
+    }
+  }
+
+  it('enregistre la série terminée et son score, une seule fois', async () => {
+    const page = await render();
+    await finish(page);
+    await page.fixture.whenStable();
+    expect(TestBed.inject(ProgressStore).moduleProgress('jours-de-la-semaine')()).toMatchObject({
+      sessions: 1,
+      bestFirstTry: { right: 16, total: 16 },
+      done: false,
+    });
+  });
+
+  it('propose de marquer le module terminé en fin de série', async () => {
+    const page = await render();
+    await finish(page);
+    page.button('Marquer comme terminé')!.click();
+    await page.fixture.whenStable();
+    expect(TestBed.inject(ProgressStore).moduleProgress('jours-de-la-semaine')()?.done).toBe(true);
+    expect(page.button('Marquer comme terminé')).toBeUndefined();
+    expect(page.el.textContent).toContain('Module terminé');
   });
 });

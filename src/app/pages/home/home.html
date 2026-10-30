@@ -4,14 +4,24 @@
 </p>
 
 @if (hasModules) {
-  <fd-radio-group
-    class="app-home__filter"
-    legend="Afficher"
-    orientation="horizontal"
-    [options]="kindOptions"
-    [value]="kind()"
-    (valueChange)="setKind($event)"
-  />
+  <div class="app-home__filters">
+    <fd-radio-group
+      class="app-home__filter"
+      legend="Type"
+      orientation="horizontal"
+      [options]="kindOptions"
+      [value]="kind()"
+      (valueChange)="setKind($event)"
+    />
+    <fd-radio-group
+      class="app-home__filter"
+      legend="État"
+      orientation="horizontal"
+      [options]="stateOptions"
+      [value]="state()"
+      (valueChange)="setState($event)"
+    />
+  </div>
 
   <h2 class="fd-sr">Liste des modules</h2>
   <ul class="app-module-list">
@@ -22,12 +32,15 @@
           <span slot="title">{{ module.title }}</span>
           <span slot="meta">
             Cours du <time [attr.datetime]="module.lessonDate">{{ module.dateLabel }}</time>
+            @if (module.done) {
+              <fd-badge class="app-module-list__done" tone="tokiwa" soft>Terminé</fd-badge>
+            }
           </span>
           {{ module.summary }}
         </a>
       </li>
     } @empty {
-      <li class="app-module-list__none">Aucun module de ce type pour l’instant.</li>
+      <li class="app-module-list__none">Aucun module ne correspond à ces filtres.</li>
     }
   </ul>
 } @else {
