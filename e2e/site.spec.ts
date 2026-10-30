@@ -36,6 +36,8 @@ test('le thème Nuit choisi est rétabli au rechargement', async ({ page }) => {
   await openPage(page, '/reglages');
   await page.getByText('Thème Nuit').click();
   await expect(page.getByRole('switch', { name: 'Thème Nuit' })).toBeChecked();
+  // Le thème est posé et enregistré par le même effet : l'attendre avant de recharger.
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 });

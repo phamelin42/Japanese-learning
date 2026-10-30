@@ -11,6 +11,8 @@ export async function openPage(page: Page, path: string, theme: Theme = 'light')
   }
   await page.goto(path);
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  // Le <h1> est déjà dans le HTML pré-rendu : attendre qu'Angular ait pris la main.
+  await expect(page.locator('html')).toHaveAttribute('data-app-ready', '');
 }
 
 /** axe WCAG 2.2 AA, une fois qu'aucune animation n'est en cours (sinon il lit des couleurs interpolées). */
