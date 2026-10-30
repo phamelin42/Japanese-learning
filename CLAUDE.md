@@ -17,6 +17,7 @@ Révision par **modules** (vocabulaire ou leçon), mobile d'abord : Phil colle s
 | ------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
 | `npm start`                          | Serveur de développement                                                                                      |
 | `npm test`                           | Tests unitaires (Vitest via `ng test`)                                                                        |
+| `npm run test:api`                   | Tests de la fonction serveur `api/` (Vitest seul, Node : pas d'Angular)                                       |
 | `npm run lint` / `npm run typecheck` | ESLint (angular-eslint) / tsc sur l'appli et les specs                                                        |
 | `npm run build`                      | Pré-rendu statique (`dist/japanese-learning/browser`), puis `tools/postbuild.mjs` (`404.html`, `sitemap.xml`) |
 | `npm run e2e`                        | Playwright sur le build : axe Jour/Nuit, reflow 320 px, clavier, 404, sitemap                                 |
@@ -27,6 +28,8 @@ Révision par **modules** (vocabulaire ou leçon), mobile d'abord : Phil colle s
 ## Structure
 
 - `src/app/` : coquille (`app.*`), `pages/<page>/` (une route paresseuse chacune), `seo/` (titre, description, canonique et `noindex` lus dans les `data` des routes).
+- `src/app/content/` : modèle de module, index `modules/index.ts` (un fichier par module), `validate.ts` lancé sur tous les modules par `content.spec.ts`. `answers/` : correction (kana, rōmaji, français). `practice/` : questions et série. `progress/` : progression locale et synchro.
+- `api/progress.ts` : fonction Vercel (GET/PUT) ; sa logique est dans `api/_lib/` (un fichier de `api/` sans `_` devient une fonction). Elle importe `progress.model.ts` et `merge-progress.ts`, qui restent sans dépendance Angular. Variables Vercel : `PROGRESS_SECRET`, `KV_REST_API_URL`, `KV_REST_API_TOKEN` (ADR-001).
 - `e2e/` : `routes.ts` liste les chemins audités par axe et le reflow ; toute nouvelle page ou tout nouvel état s'y ajoute.
 - Pré-rendu : chaque route est déclarée dans `app.routes.server.ts` ; une route sans pré-rendu n'a ni HTML lisible sans JavaScript ni place au sitemap.
 - `src/styles.scss` : polices de Fuda, **avec** les sous-ensembles japonais (le site affiche du japonais). Les styles de Fuda sont déclarés dans `angular.json`.

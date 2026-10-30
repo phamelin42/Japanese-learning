@@ -4,3 +4,25 @@
   <h2 id="reglages-affichage" class="app-settings__heading title-2">Affichage</h2>
   <fd-switch [checked]="isDark()" (checkedChange)="setDark($event)">Thème Nuit</fd-switch>
 </section>
+
+<section class="app-settings__section" aria-labelledby="reglages-synchro">
+  <h2 id="reglages-synchro" class="app-settings__heading title-2">Synchronisation</h2>
+  <p class="app-settings__status" role="status">{{ syncMessage() }}</p>
+
+  <form class="app-settings__form" autocomplete="off" (submit)="saveSecret($event)">
+    <fd-text-field
+      [formField]="secretForm.code"
+      type="password"
+      label="Code de synchronisation"
+      hint="Le même code sur le téléphone et l’ordinateur."
+    />
+    <button fdButton variant="primary" type="submit">Enregistrer</button>
+  </form>
+
+  @if (sync.secret()) {
+    <p class="app-settings__note">Un code est enregistré sur cet appareil.</p>
+    <button fdButton variant="ghost" type="button" (click)="forgetSecret()">
+      Oublier ce code sur cet appareil
+    </button>
+  }
+</section>

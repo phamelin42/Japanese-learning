@@ -8,10 +8,11 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "eslint .",
-    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit && tsc -p tsconfig.e2e.json",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit && tsc -p tsconfig.e2e.json && tsc -p tsconfig.api.json",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "test:api": "vitest run --config vitest.api.config.ts"
   },
   "private": true,
   "packageManager": "npm@11.19.1",
@@ -28,6 +29,7 @@
     "@fontsource/dela-gothic-one": "^5.3.0",
     "@fontsource/zen-maru-gothic": "^5.3.1",
     "@phamelin/fuda": "^0.1.0",
+    "@upstash/redis": "^1.40.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
