@@ -6,7 +6,10 @@ Règles communes à tous les projets de Phil (copie de `phamelin42/claude-contex
 
 Application web pour que Phil travaille ses points faibles en japonais. Domaine : `japanese-learning.phamelin.fr`.
 
-**Le produit n'est pas encore défini** (contenu, types d'exercices, suivi des progrès, stockage) : le dépôt n'est qu'un squelette Angular avec Fuda. Aucune fonctionnalité ne se code avant que Phil ait validé un plan par étapes (modèle : `lois-votes/docs/PLAN.md`).
+Révision par **modules** (vocabulaire ou leçon), mobile d'abord : Phil colle ses notes de cours, l'agent les transforme en modules (contenu dans le dépôt, relu en PR), Phil s'entraîne en écrivant les réponses et marque lui-même un module terminé. Produit et décisions validées : `docs/PLAN.md` ; progression synchronisée par Vercel + Upstash Redis : `docs/adr-001-progression-synchronisee.md` ; tâches : `docs/superpowers/plans/2026-10-30-revision-par-modules.md`, à suivre dans l'ordre, une PR par tâche. Le code ne commence qu'une fois ce plan validé par Phil.
+
+- Saisie japonaise en kana **ou** rōmaji (kanji accepté s'il est dans la fiche) ; questions dans les deux sens, mélangées.
+- Les `id` de modules, de mots et d'exercices ne se renomment jamais : la progression s'y rattache.
 
 ## Commandes
 
