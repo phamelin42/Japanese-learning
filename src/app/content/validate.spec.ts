@@ -75,6 +75,18 @@ describe('validateModule', () => {
     },
   );
 
+  it('exige une réponse en kana pour un exercice en japonais (sinon le rōmaji ne passe jamais)', () => {
+    const kanjiOnly = { ...valid.exercises![0], answers: ['月曜日'] };
+    expect(validateModule(withChange({ exercises: [kanjiOnly] }))).toContainEqual(
+      expect.stringContaining('kana'),
+    );
+  });
+
+  it('n’exige pas de kana pour un exercice à réponse française', () => {
+    const french = { ...valid.exercises![0], answers: ['lundi'], answerLang: 'fr' as const };
+    expect(validateModule(withChange({ exercises: [french] }))).toEqual([]);
+  });
+
   it('refuse un exercice sans réponse', () => {
     expect(
       validateModule(withChange({ exercises: [{ ...valid.exercises![0], answers: [] }] })),
