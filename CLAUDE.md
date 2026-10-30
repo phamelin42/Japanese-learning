@@ -11,6 +11,10 @@ Révision par **modules** (vocabulaire ou leçon), mobile d'abord : Phil colle s
 - Saisie japonaise en kana **ou** rōmaji (kanji accepté s'il est dans la fiche) ; questions dans les deux sens, mélangées.
 - Les `id` de modules, de mots et d'exercices ne se renomment jamais : la progression s'y rattache.
 
+## Après un cours
+
+Phil colle ses notes : suivre le skill `integrer-cours` (`.claude/skills/integrer-cours/SKILL.md`), qui applique `docs/ajouter-un-cours.md`. Date du cours obligatoire, doutes posés en une fois, aucun `id` renommé.
+
 ## Commandes
 
 | Commande                             | Rôle                                                                                                          |
