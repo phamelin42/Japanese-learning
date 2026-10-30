@@ -148,7 +148,8 @@ fin, une fois les décisions et les chiffres arrêtés.
   `SessionStart` (`.claude/hooks/session-start.sh`) installe le Node de `.nvmrc` (nvm de
   `/opt/nvm`, sinon archive de nodejs.org), lance l'installation npm et exporte `PW_CHROMIUM`. Si
   `node -v` n'est pas le bon, c'est le hook qu'on corrige. Sans hook :
-  `source /opt/nvm/nvm.sh && nvm use 24`.
+  `source /opt/nvm/nvm.sh && nvm use 24`, **en tête de chaque commande Bash** (l'état du shell ne
+  persiste pas d'un appel à l'autre : le `node` 22 revient sinon).
 - **Ne jamais lancer `playwright install`** : un Chromium est préinstallé dans `/opt/pw-browsers`.
   Désigner celui-là (`PW_CHROMIUM=/opt/pw-browsers/chromium` ou
   `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=…`, selon ce que lit `playwright.config.ts`).
@@ -469,7 +470,7 @@ fin, une fois les décisions et les chiffres arrêtés.
 - Commiter au fil de l'eau (au moins toutes les 25 à 30 actions) : un travail non commité est
   perdu ou sauvé en vrac.
 
-## 18. Fiches, prompts et travail délégué
+## 18. Fiches, travail délégué et mise à jour du contexte
 
 - Une fiche (`prompts/NN-*.md`, `docs/prompts/`) est autoportante : contexte, fichiers à lire,
   critères d'acceptation, **hors périmètre**, vérification. On l'applique **à la lettre**, une
@@ -487,16 +488,27 @@ fin, une fois les décisions et les chiffres arrêtés.
 - Chaîne implémenteur → relecteur de tâche → relecture ciblée → relecture finale : à garder (elle a
   trouvé des défauts réels), mais l'implémenteur reçoit d'emblée la liste des cas adverses et les
   tâches liées sont regroupées. Ordre de grandeur de ce travail : 35 à 45 appels d'agents par PR.
-- **Rétro après chaque PR relue** : un défaut d'un type nouveau → une ligne dans les pièges du
-  `CLAUDE.md` du projet (ou ici s'il vaut pour tous) ; un type déjà listé qui revient → le
-  transformer en **contrôle automatique** (test, règle de lint, script de `tools/`). Garder les
-  `CLAUDE.md` courts : fusionner plutôt qu'ajouter, supprimer ce qui ne sert plus.
+- **Le contexte se met à jour au fil de l'eau** (décision de Phil du 30/10/2026) : à chaque
+  nouvelle demande ou information importante à garder en mémoire (décision, préférence, règle,
+  piège), l'agent l'écrit tout de suite là où elle vaut, sans attendre la fin : dans le
+  `CLAUDE.md` du projet si elle ne vaut que pour lui ; ici, par une PR vers `main` puis
+  `scripts/installer.sh` dans les projets, si elle vaut pour plusieurs ou si Phil l'a demandée
+  pour tous. La conversation ne survit pas à la session, le contexte oui.
+- **Rétro à la fin de chaque tâche, par chaque agent** (Phil, 30/10/2026), et après chaque PR
+  relue : ce qui a fait perdre du temps (commande ratée, information manquante, aller-retour,
+  attente) et ce qui a marché. Un agent délégué la rend dans son rapport, l'agent principal la
+  consigne. Un défaut d'un type nouveau → une ligne dans les pièges du `CLAUDE.md` du projet (ou
+  ici s'il vaut pour tous) ; un type déjà listé qui revient → le transformer en **contrôle
+  automatique** (test, règle de lint, script de `tools/`) ; une pratique efficace → une ligne qui
+  la prescrit. Garder les `CLAUDE.md` courts : fusionner plutôt qu'ajouter, supprimer ce qui ne
+  sert plus.
 
 ## 19. Rendre compte à Phil
 
 - Message final : ce qui est fait, ce qui ne l'est pas et pourquoi, sortie résumée des
   vérifications (vraiment lancées), écarts au plan, lien de la PR et son état (fusionnée, ou ce
-  qui la bloque).
+  qui la bloque), et la rétro du § 18 (ce qui a coûté du temps, ce qui a marché, ce qui est entré
+  dans le contexte).
 - Terminer par **ce que Phil doit faire, en liste numérotée** (réglage Vercel ou DNS, secret à
   créer, branche par défaut, décision à prendre), ou dire qu'il n'y a rien à faire.
 - Une sortie rouge se rapporte telle quelle ; une étape sautée se dit.

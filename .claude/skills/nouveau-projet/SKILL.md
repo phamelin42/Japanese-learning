@@ -42,7 +42,9 @@ minutes ; ne pas repasser à une dépendance git pour autant : attendre).
 1. Dépôt `phamelin42/<nom>`, **public**, sans fichier initial. Créer par les outils GitHub
    (`create_repository`) ; si la session le refuse, demander à Phil de le créer (vide, ou par
    « Use this template » depuis `site-template`) et de l'ajouter à la session, puis `add_repo`
-   avec l'accès `push`.
+   avec l'accès `push`. Lire ensuite le **nom réel** du dépôt (`search_repositories`) : Phil a
+   créé `Japanese-learning` pour `japanese-learning`, et c'est cette casse qu'`infra` porte (§ 10).
+   En attendant le dépôt, la PR d'`infra` peut déjà s'ouvrir en brouillon.
 2. **`main` d'abord** : dépôt vide → un commit initial sur `main` (un `README.md` d'une ligne,
    « Initialise le dépôt »), poussé sur `main`. Créé depuis le modèle → `main` existe déjà.
    Vérifier : `git ls-remote origin refs/heads/main`.
@@ -50,6 +52,13 @@ minutes ; ne pas repasser à une dépendance git pour autant : attendre).
    branche imposée par la session), jamais directement sur `main`.
 
 ## 3. Squelette depuis `site-template`
+
+Si Phil écarte `site-template` (« juste un projet Angular vide ») : générer dans le scratchpad,
+hors du dépôt, `npx @angular/cli@latest new <nom> --style=scss --routing --ssr=false --skip-git
+--skip-install --ai-config=none --defaults`, copier sans `README.md` ni `favicon.ico`, puis
+reprendre de `lois-votes` `eslint.config.js`, les scripts (`lint`, `typecheck`, `format:check`) et
+`ci.yml`. Les étapes 4 à 9 restent les mêmes ; une page d'accueil sans `<router-outlet />` fait
+avertir le build (NG8113).
 
 ```bash
 git -C "$TPL" archive HEAD | tar -x -C "$P"      # le modèle sans son historique
@@ -137,7 +146,8 @@ Prettier vérifié avant chaque push.
 
 Sauf si le projet se déploie lui-même ailleurs (cf. « Ce qui n'a pas sa place ici » dans le README
 d'`infra`) : dans `phamelin42/infra`, sur une branche,
-`node scripts/add-project.mjs <nom> phamelin42/<nom> [sous-domaine]`, puis `node --test` (vert),
+`node scripts/add-project.mjs <nom> phamelin42/<nom> [sous-domaine]` (le script réécrit tout
+`projects.json` : relire le diff et remettre les lignes qu'il a reformatées), puis `node --test` (vert),
 commit « Déclare le projet <nom> », PR vers `main`. Le projet Vercel et le DNS seront créés au
 merge.
 
