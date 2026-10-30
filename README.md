@@ -8,6 +8,11 @@ Angular 22 et le design system [Fuda](https://github.com/phamelin42/design-syste
 npm ci
 npm start      # serveur de développement
 npm test       # tests unitaires
+npm run test:api  # tests de la fonction serveur api/
 npm run build  # pré-rendu de production
 npm run e2e    # Playwright + axe sur le build
 ```
+
+## Synchronisation de la progression
+
+La progression (modules terminés, scores) est synchronisée par `api/progress.ts` (fonction Vercel) et une base Upstash Redis : voir `docs/adr-001-progression-synchronisee.md`. Variables d'environnement du projet Vercel : `PROGRESS_SECRET` (le code saisi dans Réglages), `KV_REST_API_URL` et `KV_REST_API_TOKEN` (posées par l'intégration Upstash). Sans elles, l'application marche, la progression reste sur l'appareil.

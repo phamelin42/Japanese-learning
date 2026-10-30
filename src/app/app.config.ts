@@ -1,3 +1,4 @@
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import {
@@ -19,6 +20,7 @@ export const appConfig: ApplicationConfig = {
     ),
     // Un toucher reçu avant la fin de l'hydratation est rejoué au lieu d'être perdu.
     provideClientHydration(withEventReplay()),
+    provideHttpClient(withFetch()),
     { provide: TitleStrategy, useClass: PageTitleStrategy },
   ],
 };
