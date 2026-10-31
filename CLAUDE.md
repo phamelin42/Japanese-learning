@@ -13,7 +13,7 @@ Révision par **modules** (vocabulaire ou leçon), mobile d'abord : Phil colle s
 
 ## Après un cours
 
-Phil colle ses notes : suivre le skill `integrer-cours` (`.claude/skills/integrer-cours/SKILL.md`), qui applique `docs/ajouter-un-cours.md`. Date du cours obligatoire, doutes posés en une fois, aucun `id` renommé.
+Phil colle ses notes : suivre le skill `integrer-cours` (`.claude/skills/integrer-cours/SKILL.md`), qui applique `docs/ajouter-un-cours.md`. Pas de date à demander (`lessonDate` = date d'ajout), mot noté en français seul → ajouter son équivalent japonais, doutes posés en une fois, aucun `id` renommé.
 
 ## Commandes
 

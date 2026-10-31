@@ -31,7 +31,7 @@
           <fd-badge slot="badge" tone="sakura" soft>{{ module.kindLabel }}</fd-badge>
           <span slot="title">{{ module.title }}</span>
           <span slot="meta">
-            Cours du <time [attr.datetime]="module.lessonDate">{{ module.dateLabel }}</time>
+            Ajouté le <time [attr.datetime]="module.lessonDate">{{ module.dateLabel }}</time>
             @if (module.done) {
               <fd-badge class="app-module-list__done" tone="tokiwa" soft>Terminé</fd-badge>
             }
