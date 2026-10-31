@@ -1,3 +1,7 @@
+import { checkAnswer } from '../answers/check-answer';
+import { romajiPattern } from '../answers/romaji';
+import { buildQuestions } from '../practice/build-questions';
+import { isKana } from './kana';
 import { MODULES } from './modules';
 import { validateModule } from './validate';
 
@@ -15,6 +19,31 @@ describe('contenu des modules', () => {
     describe(entry.id, () => {
       it('ne contient aucune faute de saisie', async () => {
         expect(validateModule(await entry.load())).toEqual([]);
+      });
+
+      it('accepte, à la saisie, chaque réponse qu’il attend', async () => {
+        const rejected: string[] = [];
+        for (const question of buildQuestions(await entry.load())) {
+          for (const answer of question.accepted) {
+            if (!checkAnswer(answer, question.accepted, question.answerLang)) {
+              rejected.push(`${question.id} : « ${answer} »`);
+            }
+          }
+        }
+        expect(rejected).toEqual([]);
+      });
+
+      it('permet de saisir en rōmaji chaque réponse japonaise écrite en kana', async () => {
+        const unsupported: string[] = [];
+        for (const question of buildQuestions(await entry.load())) {
+          if (question.answerLang !== 'ja') continue;
+          for (const answer of question.accepted.filter(isKana)) {
+            // « (?!) » : le motif qui ne valide rien, rendu pour un kana que la table ne connaît pas.
+            if (romajiPattern(answer).source === '(?!)')
+              unsupported.push(`${question.id} : ${answer}`);
+          }
+        }
+        expect(unsupported).toEqual([]);
       });
 
       it('est décrit à l’identique dans l’index et dans son fichier', async () => {

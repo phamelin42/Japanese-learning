@@ -6,7 +6,7 @@ publie à la fusion. Le skill `.claude/skills/integrer-cours` suit ce document.
 
 ## Ce que Phil donne
 
-- La **date du cours** (sinon la demander : elle date le module et trie l’accueil).
+- Pas de date : `lessonDate` est la **date d’ajout** (celle du jour), qui trie l’accueil. Phil s’en moque (30/10/2026) : ne plus la demander.
 - Ses notes, telles quelles : liste de mots, phrases, remarques du professeur, photo du cahier.
 - Ses points faibles du jour, s’il les a notés (« je confonds は et が », « les compteurs »).
 
@@ -21,7 +21,12 @@ publie à la fusion. Le skill `.claude/skills/integrer-cours` suit ce document.
    - lecture incertaine (日 : にち ou ひ ?), sens ambigu, niveau de politesse (です/ます ou forme
      neutre) ;
    - kanji : seulement s’il est dans les notes ou d’usage courant pour le niveau ; sinon kana seuls ;
-   - faute probable dans les notes : la signaler, ne jamais la corriger en silence.
+   - faute probable dans les notes : la signaler, ne jamais la corriger en silence ;
+   - un mot noté **en français seulement** : ajouter son équivalent japonais (kana) et le signaler
+     dans la PR (règle de Phil, 31/10/2026) ;
+   - un mot noté **en rōmaji seulement** : proposer le français et la lecture en kana, les doutes
+     d’abord. Phil écrit le rōmaji à l’oreille (« shyu », « jyo », voyelles longues parfois
+     omises) : ne jamais deviner un mot ambigu, le lui demander.
 3. **Écrire les modules** :
    - **vocabulaire** (`kind: 'vocabulaire'`) : un mot par entrée, `fr` comme Phil l’écrirait,
      `frAlternatives` pour les synonymes courants, `kana` obligatoire (hiragana, ou katakana pour les

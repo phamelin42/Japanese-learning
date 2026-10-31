@@ -21,6 +21,10 @@ export class ModulePage {
   protected readonly kindLabel = computed(() => KIND_LABELS[this.module().kind]);
   protected readonly dateLabel = computed(() => formatLessonDate(this.module().lessonDate));
   protected readonly questionCount = computed(() => buildQuestions(this.module()).length);
+  /** Sans kanji, la colonne « Lecture » serait vide : on ne l'affiche pas. */
+  protected readonly hasReadings = computed(() =>
+    (this.module().vocabulary ?? []).some((word) => !!word.kanji),
+  );
   protected readonly isDone = computed(
     () => this.store.progress().modules[this.module().id]?.done === true,
   );

@@ -8,12 +8,13 @@ description: Intégrer les notes d’un cours de japonais de Phil dans l’appli
 Le document qui fait foi est `docs/ajouter-un-cours.md` : le lire **en entier** avant de
 commencer. Ce skill n’en est que l’ordre d’exécution.
 
-1. **Date du cours** : la demander si les notes ne la donnent pas. Ne jamais l’inventer.
+1. **Date** : ne pas la demander. `lessonDate` est la date d’ajout, celle du jour (Phil s’en moque).
 2. **Lire l’existant** : `src/app/content/modules/index.ts`, puis seulement les modules du même
    thème (`grep -rn "<mot>" src/app/content/modules`). Format : `src/app/content/module.model.ts`.
 3. **Proposer en une seule fois** (`AskUserQuestion` ou un message court) : le découpage en
    modules (créés ou enrichis, vocabulaire ou leçon) et chaque doute avec sa valeur par défaut
-   (lecture, sens, politesse, kanji, faute probable dans les notes). Avancer sur le reste pendant
+   (lecture, sens, politesse, kanji, faute probable dans les notes). Un mot noté en français seul :
+   y ajouter l’équivalent japonais et le signaler. Avancer sur le reste pendant
    l’attente ; appliquer les valeurs par défaut si Phil dit « vas-y ».
 4. **Écrire** `src/app/content/modules/<id>.ts` (export par défaut d’un `StudyModule`) et son
    entrée dans `modules/index.ts`, décrite à l’identique. Nouveaux `id` en kebab-case ; aucun `id`

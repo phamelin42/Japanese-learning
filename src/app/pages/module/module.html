@@ -2,7 +2,7 @@
 
 <p class="app-module__kicker">
   <fd-badge tone="sakura" soft>{{ kindLabel() }}</fd-badge>
-  Cours du <time [attr.datetime]="m.lessonDate">{{ dateLabel() }}</time>
+  Ajouté le <time [attr.datetime]="m.lessonDate">{{ dateLabel() }}</time>
 </p>
 <h1 class="app-page__title title-1">{{ m.title }}</h1>
 <p class="app-page__lead">{{ m.summary }}</p>
@@ -48,7 +48,9 @@
           <tr>
             <th scope="col">Français</th>
             <th scope="col">Japonais</th>
-            <th scope="col">Lecture</th>
+            @if (hasReadings()) {
+              <th scope="col">Lecture</th>
+            }
           </tr>
         </thead>
         <tbody>
@@ -56,7 +58,9 @@
             <tr>
               <td>{{ word.fr }}</td>
               <td lang="ja">{{ word.kanji ?? word.kana }}</td>
-              <td lang="ja">{{ word.kanji ? word.kana : '' }}</td>
+              @if (hasReadings()) {
+                <td lang="ja">{{ word.kanji ? word.kana : '' }}</td>
+              }
             </tr>
           }
         </tbody>
