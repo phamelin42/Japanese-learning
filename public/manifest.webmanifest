@@ -1,0 +1,21 @@
+{
+  "name": "Apprendre le japonais",
+  "short_name": "Japonais",
+  "description": "Réviser le vocabulaire et les points faibles de mes cours de japonais, module par module.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FDF8F8",
+  "theme_color": "#F5B1C5",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
