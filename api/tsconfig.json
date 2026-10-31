@@ -1,0 +1,11 @@
+/* Lu par Vercel pour compiler la fonction serveur. Le tsconfig.json racine (module: preserve) fait garder
+   les `import` ESM alors que le package.json n'a pas "type": "module" : la fonction plante au chargement.
+   On compile donc en CommonJS. Le typage de api/ reste vérifié par tsconfig.api.json. */
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  }
+}
