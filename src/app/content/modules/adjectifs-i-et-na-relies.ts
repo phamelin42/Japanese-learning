@@ -108,6 +108,38 @@ const module: StudyModule = {
       answerLang: 'ja',
       explanation: 'べんりな : な devient で.',
     },
+    {
+      id: 'oishikute-yasui',
+      prompt: 'Ce plat est délicieux et pas cher (おいしい) : この りょうりは ＿＿ やすいです。',
+      promptLang: 'fr',
+      answers: ['おいしくて'],
+      answerLang: 'ja',
+      explanation: 'おいしい : い devient くて.',
+    },
+    {
+      id: 'kireide-ookii',
+      prompt: 'Ce parc est joli et grand (きれい) : この こうえんは ＿＿ おおきいです。',
+      promptLang: 'fr',
+      answers: ['きれいで'],
+      answerLang: 'ja',
+      explanation: 'きれい est en な malgré son い : きれいな → きれいで.',
+    },
+    {
+      id: 'karukute-benri',
+      prompt: 'Ce vélo est léger et pratique (かるい) : この じてんしゃは ＿＿ べんりです。',
+      promptLang: 'fr',
+      answers: ['かるくて'],
+      answerLang: 'ja',
+      explanation: 'かるい : い devient くて.',
+    },
+    {
+      id: 'jouzude-shinsetsu',
+      prompt: 'Il est habile et gentil (じょうず) : あの ひとは ＿＿ しんせつです。',
+      promptLang: 'fr',
+      answers: ['じょうずで'],
+      answerLang: 'ja',
+      explanation: 'じょうず : な devient で.',
+    },
   ],
 };
 

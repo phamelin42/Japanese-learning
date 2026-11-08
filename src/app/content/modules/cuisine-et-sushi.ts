@@ -5,13 +5,13 @@ const module: StudyModule = {
   title: 'Cuisine et sushi',
   kind: 'vocabulaire',
   lessonDate: '2026-10-31',
-  summary: 'Crevette, thon, dorade, poivre, chef de sushi et cuisine japonaise.',
+  summary: 'Crevette, thon, dorade, poivre, chef de sushi, cuisine et cuisinier.',
   vocabulary: [
     { id: 'ebi', fr: 'crevette', frAlternatives: ['crevettes'], kana: 'えび' },
     {
       id: 'itamae',
       fr: 'chef de sushi',
-      frAlternatives: ['cuisinier', 'chef cuisinier', 'chef'],
+      frAlternatives: ['chef'],
       kana: 'いたまえ',
     },
     { id: 'maguro', fr: 'thon', kana: 'まぐろ' },
@@ -22,6 +22,13 @@ const module: StudyModule = {
       fr: 'cuisine japonaise',
       frAlternatives: ['la cuisine japonaise'],
       kana: 'にほんりょうり',
+    },
+    { id: 'ryouri', fr: 'cuisine (art de cuisiner)', frAlternatives: ['plat'], kana: 'りょうり' },
+    {
+      id: 'ryourinin',
+      fr: 'cuisinier',
+      frAlternatives: ['cuisinière', 'chef cuisinier'],
+      kana: 'りょうりにん',
     },
   ],
 };
