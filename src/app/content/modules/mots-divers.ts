@@ -5,7 +5,8 @@ const module: StudyModule = {
   title: 'Mots et expressions divers',
   kind: 'vocabulaire',
   lessonDate: '2026-10-31',
-  summary: 'Elle, pied, cheveux, rentrer, exactement, pêche, natation et deux expressions.',
+  summary:
+    'Elle, pied, cheveux, rentrer, exactement, pêche, natation, baseball et deux expressions.',
   vocabulary: [
     {
       id: 'kanojo',
@@ -25,6 +26,7 @@ const module: StudyModule = {
     { id: 'choudo', fr: 'exactement', frAlternatives: ['juste', 'pile'], kana: 'ちょうど' },
     { id: 'tsuri', fr: 'pêche', frAlternatives: ['pêche à la ligne'], kana: 'つり' },
     { id: 'suiei', fr: 'natation', kana: 'すいえい' },
+    { id: 'yakyuu', fr: 'baseball', frAlternatives: ['base-ball'], kana: 'やきゅう' },
     {
       id: 'yorokonde',
       fr: 'avec plaisir',
