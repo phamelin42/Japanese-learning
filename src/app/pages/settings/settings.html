@@ -3,6 +3,26 @@
 <section class="app-settings__section" aria-labelledby="reglages-affichage">
   <h2 id="reglages-affichage" class="app-settings__heading title-2">Affichage</h2>
   <fd-switch [checked]="isDark()" (checkedChange)="setDark($event)">Thème Nuit</fd-switch>
+  <fd-switch [checked]="sound.enabled()" (checkedChange)="sound.setEnabled($event)">
+    Son de validation
+  </fd-switch>
+</section>
+
+<section class="app-settings__section" aria-labelledby="reglages-installation">
+  <h2 id="reglages-installation" class="app-settings__heading title-2">Application</h2>
+  @if (install.installed()) {
+    <p class="app-settings__note">L’application est installée sur cet appareil.</p>
+  } @else if (install.canInstall()) {
+    <button fdButton variant="primary" type="button" (click)="installApp()">
+      Installer l’application
+    </button>
+  } @else {
+    <p class="app-settings__note">
+      Pour l’installer comme une application : sur iPhone ou iPad (Safari), touche Partager puis
+      « Sur l’écran d’accueil » ; sur Android (Chrome), ouvre le menu du navigateur puis « Installer
+      l’application ».
+    </p>
+  }
 </section>
 
 <section class="app-settings__section" aria-labelledby="reglages-synchro">

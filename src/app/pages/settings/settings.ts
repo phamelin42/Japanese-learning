@@ -1,7 +1,9 @@
 import { Component, computed, inject, signal, ViewEncapsulation } from '@angular/core';
 import { form, FormField } from '@angular/forms/signals';
 import { FdButton, FdDialog, FdSwitch, FdTextField, FdThemeService } from '@phamelin/fuda';
+import { InstallPrompt } from '../../install/install-prompt';
 import { ProgressSync } from '../../progress/progress-sync';
+import { SuccessSound } from '../../sound/success-sound';
 import { ForgetSecretDialog } from './forget-secret-dialog';
 
 /** « 14 h 05 », à l'heure de l'appareil. */
@@ -21,6 +23,8 @@ export class SettingsPage {
   private readonly themeService = inject(FdThemeService);
   private readonly dialog = inject(FdDialog);
   protected readonly sync = inject(ProgressSync);
+  protected readonly sound = inject(SuccessSound);
+  protected readonly install = inject(InstallPrompt);
 
   protected readonly isDark = computed(() => this.themeService.theme() === 'dark');
 
@@ -46,6 +50,10 @@ export class SettingsPage {
 
   protected setDark(dark: boolean): void {
     this.themeService.set(dark ? 'dark' : 'light');
+  }
+
+  protected installApp(): void {
+    void this.install.install();
   }
 
   protected saveSecret(event: Event): void {

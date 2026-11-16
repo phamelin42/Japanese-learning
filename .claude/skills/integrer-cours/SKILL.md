@@ -19,7 +19,7 @@ commencer. Ce skill n’en est que l’ordre d’exécution.
 4. **Écrire** `src/app/content/modules/<id>.ts` (export par défaut d’un `StudyModule`) et son
    entrée dans `modules/index.ts`, décrite à l’identique. Nouveaux `id` en kebab-case ; aucun `id`
    publié n’est renommé ni supprimé.
-5. **Contrôler** : `npx ng test --no-watch --include='src/app/content/**'` pendant l’écriture, puis
+5. **Contrôler** : `npx ng test --no-watch --include='src/app/content/*.spec.ts'` pendant l’écriture, puis
    toutes les étapes de `.github/workflows/ci.yml` (`lint`, `typecheck`, `test`, `test:api`,
    `build`, `format:check`, `e2e` avec `PW_CHROMIUM=…`).
 6. **Livrer** : commit « Ajoute le cours du JJ/MM : <thèmes> », PR vers `main` (modules, nombre de

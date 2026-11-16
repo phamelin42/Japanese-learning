@@ -47,6 +47,10 @@
       </p>
       @if (!right) {
         <p>Ta réponse : {{ session.lastInput() }}</p>
+      } @else if (session.smallKanaSlip()) {
+        <p class="app-practice__explanation">
+          Attention : les petits kana (ゃ ゅ ょ っ) s’écrivent en petit, comme dans le corrigé.
+        </p>
       }
       <p>
         Réponse : <span [attr.lang]="q.answerLang">{{ q.expected }}</span>

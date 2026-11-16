@@ -1,20 +1,38 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { StudyModule } from '../../content/module.model';
 import jours from '../../content/modules/jours-de-la-semaine';
 import { ProgressStore } from '../../progress/progress-store';
 import { RANDOM } from '../../random';
+import { SuccessSound } from '../../sound/success-sound';
 import { PracticePage } from './practice';
 
 describe('PracticePage', () => {
   beforeEach(() => localStorage.clear());
 
-  async function render() {
+  const play = vi.fn();
+
+  const choudo: StudyModule = {
+    id: 'choudo',
+    title: 'Exactement',
+    kind: 'vocabulaire',
+    lessonDate: '2026-11-16',
+    summary: 'Un mot avec un petit ょ.',
+    vocabulary: [{ id: 'choudo', fr: 'exactement', kana: 'ちょうど' }],
+  };
+
+  async function render(module: StudyModule = jours) {
+    play.mockClear();
     TestBed.configureTestingModule({
       // Sans mélange : la série suit l'ordre de buildQuestions (lundi fr → ja, lundi ja → fr…).
-      providers: [provideRouter([]), { provide: RANDOM, useValue: () => 0.999 }],
+      providers: [
+        provideRouter([]),
+        { provide: RANDOM, useValue: () => 0.999 },
+        { provide: SuccessSound, useValue: { play } },
+      ],
     });
     const fixture = TestBed.createComponent(PracticePage);
-    fixture.componentRef.setInput('module', jours);
+    fixture.componentRef.setInput('module', module);
     await fixture.whenStable();
     const el = fixture.nativeElement as HTMLElement;
     const field = () => el.querySelector<HTMLInputElement>('fd-text-field input')!;
@@ -62,6 +80,30 @@ describe('PracticePage', () => {
     expect(el.textContent).toContain('月曜日');
     expect(el.textContent).toContain('lune');
     expect(document.activeElement).toBe(button('Suivant'));
+  });
+
+  it('joue le son de validation sur une bonne réponse, pas sur une mauvaise', async () => {
+    const { answer, next } = await render();
+    await answer('kayoubi');
+    expect(play).not.toHaveBeenCalled();
+    await next();
+    await answer('lundi');
+    expect(play).toHaveBeenCalledTimes(1);
+  });
+
+  it('valide ちようど pour ちょうど et rappelle d’écrire les petits kana en petit', async () => {
+    const { el, answer } = await render(choudo);
+    await answer('ちようど');
+    expect(el.textContent).toContain('Juste !');
+    expect(el.textContent).toContain('petits kana');
+    expect(play).toHaveBeenCalledTimes(1);
+  });
+
+  it('ne rappelle rien quand la réponse est exacte', async () => {
+    const { el, answer } = await render(choudo);
+    await answer('ちょうど');
+    expect(el.textContent).toContain('Juste !');
+    expect(el.textContent).not.toContain('petits kana');
   });
 
   it('dit « Pas tout à fait », rappelle la saisie et donne le corrigé', async () => {
