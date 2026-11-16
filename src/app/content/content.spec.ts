@@ -1,7 +1,7 @@
 import { checkAnswer } from '../answers/check-answer';
 import { romajiPattern } from '../answers/romaji';
 import { buildQuestions } from '../practice/build-questions';
-import { isKana } from './kana';
+import { foldSmallKana, isKana, katakanaToHiragana } from './kana';
 import { MODULES } from './modules';
 import { validateModule } from './validate';
 
@@ -44,6 +44,20 @@ describe('contenu des modules', () => {
           }
         }
         expect(unsupported).toEqual([]);
+      });
+
+      it('accepte chaque réponse en kana dont les petits kana sont tapés en taille normale', async () => {
+        const rejected: string[] = [];
+        for (const question of buildQuestions(await entry.load())) {
+          if (question.answerLang !== 'ja') continue;
+          for (const answer of question.accepted.filter(isKana)) {
+            const typed = foldSmallKana(katakanaToHiragana(answer));
+            if (!checkAnswer(typed, question.accepted, 'ja')) {
+              rejected.push(`${question.id} : « ${typed} » pour « ${answer} »`);
+            }
+          }
+        }
+        expect(rejected).toEqual([]);
       });
 
       it('est décrit à l’identique dans l’index et dans son fichier', async () => {

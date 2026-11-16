@@ -31,6 +31,7 @@ describe('petits kana tapés en taille normale', () => {
   it.each([
     ['ちようど', ['ちょうど']],
     ['きやく', ['きゃく']],
+    ['やきゆう', ['やきゅう']],
     ['しゆくだい', ['しゅくだい']],
     ['きつて', ['きって']],
     ['ちようど', ['チョウド', 'ちょうど']],
@@ -43,6 +44,7 @@ describe('petits kana tapés en taille normale', () => {
 
   it('signale la faute de taille, et seulement elle', () => {
     expect(hasSmallKanaSlip('ちようど', ['ちょうど'], 'ja')).toBe(true);
+    expect(hasSmallKanaSlip('やきゆう', ['やきゅう'], 'ja')).toBe(true);
     expect(hasSmallKanaSlip('ちょうど', ['ちょうど'], 'ja')).toBe(false);
     expect(hasSmallKanaSlip('chyoudo', ['ちょうど'], 'ja')).toBe(false);
     expect(hasSmallKanaSlip('かようび', ['げつようび'], 'ja')).toBe(false);
