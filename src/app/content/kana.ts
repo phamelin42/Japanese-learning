@@ -19,3 +19,13 @@ export function katakanaToHiragana(text: string): string {
     String.fromCharCode(char.charCodeAt(0) - KATAKANA_TO_HIRAGANA),
   );
 }
+
+// Petits kana et leur forme normale : un clavier de téléphone donne « ちよう » pour « chiyou ».
+const SMALL_KANA: Record<string, string> = Object.fromEntries(
+  [...'ぁぃぅぇぉゃゅょゎっ'].map((small, i) => [small, [...'あいうえおやゆよわつ'][i]]),
+);
+
+/** Remplace chaque petit kana hiragana par sa grande forme (ょ → よ, っ → つ). */
+export function foldSmallKana(hiragana: string): string {
+  return [...hiragana].map((char) => SMALL_KANA[char] ?? char).join('');
+}
