@@ -56,6 +56,24 @@ test('une série complète au clavier, une faute revenant en fin de série', asy
   await expect(page.getByText('15 sur 16 du premier coup')).toBeVisible();
 });
 
+test('le rōmaji tapé devient des kana pendant la frappe, sans changer de clavier', async ({
+  page,
+}) => {
+  await startPractice(page);
+  // Passer les questions en français : le champ ne convertit que sur une réponse en japonais.
+  const instruction = page.locator('.app-practice__instruction');
+  while ((await instruction.textContent())?.includes('français')) {
+    await answer(page, solutions.get((await prompt(page).textContent())!.trim())!);
+    await expect(page.getByText('Juste !')).toBeVisible();
+    await goNext(page);
+  }
+
+  await field(page).pressSequentially('getsuyoubi');
+  await expect(field(page)).toHaveValue('げつようび');
+  await expect(page.getByText('Tape en rōmaji')).toBeVisible();
+  await expectNoAxeViolations(page);
+});
+
 test('la page module mène à l’entraînement', async ({ page }) => {
   await openPage(page, '/');
   await page.getByRole('link', { name: /Jours de la semaine/ }).click();

@@ -32,7 +32,13 @@
     spellcheck="false"
     (submit)="onSubmit($event)"
   >
-    <fd-text-field [formField]="answerForm.answer" label="Ta réponse" [attr.lang]="q.answerLang" />
+    <fd-text-field
+      [formField]="answerForm.answer"
+      label="Ta réponse"
+      [hint]="q.answerLang === 'ja' ? 'Tape en rōmaji : il devient des kana.' : undefined"
+      [attr.lang]="q.answerLang"
+      (input)="onFieldInput($event)"
+    />
     @if (!answered()) {
       <button fdButton variant="primary" type="submit" block>Valider</button>
     }

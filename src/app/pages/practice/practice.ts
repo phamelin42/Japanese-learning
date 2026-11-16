@@ -15,6 +15,7 @@ import {
 import { form, FormField } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { FdButton, FdIcon, FdProgress, FdTextField } from '@phamelin/fuda';
+import { romajiToKana } from '../../answers/romaji-to-kana';
 import { StudyModule } from '../../content/module.model';
 import { buildQuestions } from '../../practice/build-questions';
 import { PracticeSession } from '../../practice/practice-session';
@@ -57,6 +58,11 @@ export class PracticePage {
     this.total() === 0 ? 0 : Math.round((this.done() / this.total()) * 100),
   );
 
+  /** Ce que le champ affichait après la dernière frappe : sert à savoir ce qui vient d'être tapé. */
+  private shown = '';
+  /** Le rōmaji réellement tapé tant que le champ n'a fait que s'allonger ; `null` après une correction. */
+  private typed: string | null = '';
+
   private readonly nextButton = viewChild('nextButton', { read: ElementRef });
   private readonly doneHeading = viewChild<ElementRef<HTMLElement>>('doneHeading');
 
@@ -75,14 +81,44 @@ export class PracticePage {
       this.next();
       return;
     }
-    this.session.submit(this.answerModel().answer);
+    const question = this.session.current();
+    const shown = this.answerModel().answer;
+    const answer = question?.answerLang === 'ja' ? romajiToKana(shown, { final: true }) : shown;
+    if (answer !== shown) this.answerModel.set({ answer });
+    this.session.submit(answer, answer !== this.typed ? this.typed : null);
     if (this.session.status() === 'right') this.sound.play();
     if (this.answered()) this.afterRender(() => this.nextButton()?.nativeElement.focus());
   }
 
+  /**
+   * Sur une question en japonais, ce qui est tapé en rōmaji devient des kana dans le champ, comme
+   * avec un clavier japonais : on garde le clavier français. Les claviers japonais, eux, composent
+   * leurs kana eux-mêmes (`isComposing`) : on n'y touche pas.
+   */
+  protected onFieldInput(event: Event): void {
+    const field = event.target;
+    if (!(field instanceof HTMLInputElement)) return;
+    if (this.session.current()?.answerLang !== 'ja') return;
+    const value = field.value;
+    if ((event as InputEvent).isComposing) {
+      this.typed = null;
+      this.shown = value;
+      return;
+    }
+    if (value === '') this.typed = '';
+    else if (this.typed !== null && value.startsWith(this.shown)) {
+      this.typed += value.slice(this.shown.length);
+    } else this.typed = null;
+    // Une correction au milieu du texte ne doit pas renvoyer le curseur à la fin.
+    const atEnd = field.selectionStart === null || field.selectionStart >= value.length;
+    const converted = atEnd ? romajiToKana(value) : value;
+    this.shown = converted;
+    if (converted !== value) this.answerModel.set({ answer: converted });
+  }
+
   protected next(): void {
     this.session.next();
-    this.answerModel.set({ answer: '' });
+    this.resetTyping();
     if (this.session.status() === 'done') {
       this.store.recordSession(this.module().id, this.session.firstTryScore());
     }
@@ -105,8 +141,14 @@ export class PracticePage {
 
   private restartWith(total: number, start: () => void): void {
     this.total.set(total);
-    this.answerModel.set({ answer: '' });
+    this.resetTyping();
     start();
+  }
+
+  private resetTyping(): void {
+    this.answerModel.set({ answer: '' });
+    this.shown = '';
+    this.typed = '';
   }
 
   private focusField(): void {

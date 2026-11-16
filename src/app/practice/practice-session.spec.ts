@@ -177,4 +177,38 @@ describe('PracticeSession', () => {
     expect(s.status()).toBe('right');
     expect(s.smallKanaSlip()).toBe(false);
   });
+
+  describe('rōmaji tapé et converti en kana par le champ', () => {
+    const konnichiwa: Question = {
+      id: 'konnichiwa',
+      prompt: 'bonjour',
+      promptLang: 'fr',
+      accepted: ['こんにちは'],
+      answerLang: 'ja',
+      expected: 'こんにちは',
+    };
+
+    it('accepte la graphie tapée quand le kana affiché diffère (wa pour la particule は)', () => {
+      const s = session();
+      s.start([konnichiwa]);
+      s.submit('こんにちわ', 'konnichiwa');
+      expect(s.status()).toBe('right');
+      expect(s.smallKanaSlip()).toBe(false);
+      expect(s.lastInput()).toBe('こんにちわ');
+    });
+
+    it('refuse quand ni le kana affiché ni le rōmaji tapé ne conviennent', () => {
+      const s = session();
+      s.start([konnichiwa]);
+      s.submit('こんにちわ', 'konnichiwaa');
+      expect(s.status()).toBe('wrong');
+    });
+
+    it('refuse un kana faux même sans rōmaji tapé (champ corrigé à la main)', () => {
+      const s = session();
+      s.start([konnichiwa]);
+      s.submit('こんにちわ', null);
+      expect(s.status()).toBe('wrong');
+    });
+  });
 });

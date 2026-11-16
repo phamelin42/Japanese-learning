@@ -42,6 +42,18 @@ describe('PracticePage', () => {
       el.querySelector('form')!.dispatchEvent(new Event('submit', { cancelable: true }));
       await fixture.whenStable();
     };
+    /** Frappe après frappe, comme au clavier : chaque lettre part en événement `input` qui remonte. */
+    const type = async (text: string) => {
+      for (const letter of text) {
+        field().value += letter;
+        field().dispatchEvent(new Event('input', { bubbles: true }));
+        await fixture.whenStable();
+      }
+    };
+    const submit = async () => {
+      el.querySelector('form')!.dispatchEvent(new Event('submit', { cancelable: true }));
+      await fixture.whenStable();
+    };
     const button = (name: string) =>
       [...el.querySelectorAll<HTMLButtonElement>('button')].find(
         (b) => b.textContent?.trim() === name,
@@ -51,7 +63,7 @@ describe('PracticePage', () => {
       await fixture.whenStable();
     };
     const prompt = () => el.querySelector('.app-practice__prompt')?.textContent?.trim();
-    return { fixture, el, field, answer, button, next, prompt };
+    return { fixture, el, field, answer, type, submit, button, next, prompt };
   }
 
   it('pose la première question sans rien révéler de la réponse', async () => {
@@ -110,8 +122,106 @@ describe('PracticePage', () => {
     const { el, answer } = await render();
     await answer('kayoubi');
     expect(el.textContent).toContain('Pas tout à fait');
-    expect(el.textContent).toContain('Ta réponse : kayoubi');
+    expect(el.textContent).toContain('Ta réponse : かようび');
     expect(el.textContent).toContain('月曜日');
+  });
+
+  describe('rōmaji transformé en kana pendant la frappe', () => {
+    const hon: StudyModule = {
+      id: 'hon',
+      title: 'Livre',
+      kind: 'vocabulaire',
+      lessonDate: '2026-11-16',
+      summary: 'Un mot en ん.',
+      vocabulary: [{ id: 'hon', fr: 'livre', kana: 'ほん' }],
+    };
+    const bonjour: StudyModule = {
+      id: 'bonjour',
+      title: 'Bonjour',
+      kind: 'vocabulaire',
+      lessonDate: '2026-11-16',
+      summary: 'Un mot avec la particule は.',
+      vocabulary: [{ id: 'konnichiwa', fr: 'bonjour', kana: 'こんにちは' }],
+    };
+
+    it('écrit les kana dans le champ au fil des lettres', async () => {
+      const { field, type } = await render();
+      await type('getsu');
+      expect(field().value).toBe('げつ');
+      await type('youbi');
+      expect(field().value).toBe('げつようび');
+    });
+
+    it('laisse en lettres une syllabe pas encore finie', async () => {
+      const { field, type } = await render();
+      await type('getsuy');
+      expect(field().value).toBe('げつy');
+    });
+
+    it('valide la réponse tapée en rōmaji, ん final compris', async () => {
+      const { el, type, submit } = await render(hon);
+      await type('hon');
+      await submit();
+      expect(el.textContent).toContain('Juste !');
+    });
+
+    it('accepte la graphie tapée même quand le kana affiché diffère (konnichiwa)', async () => {
+      const { el, field, type, submit } = await render(bonjour);
+      await type('konnichiwa');
+      expect(field().value).toBe('こんにちわ');
+      await submit();
+      expect(el.textContent).toContain('Juste !');
+    });
+
+    it('refuse une réponse corrigée à la main qui n’est plus celle tapée', async () => {
+      const { el, field, fixture, type, submit } = await render(bonjour);
+      await type('konnichiwa');
+      // Un retour arrière puis une nouvelle frappe : le rōmaji tapé n'est plus connu, seul le kana
+      // affiché compte, et わ n'est pas は.
+      field().value = 'こんにち';
+      field().dispatchEvent(new Event('input', { bubbles: true }));
+      await fixture.whenStable();
+      await type('wa');
+      expect(field().value).toBe('こんにちわ');
+      await submit();
+      expect(el.textContent).toContain('Pas tout à fait');
+    });
+
+    it('ne transforme pas la saisie d’un clavier japonais en cours de composition', async () => {
+      const { field, fixture } = await render();
+      field().value = 'getsu';
+      field().dispatchEvent(new InputEvent('input', { bubbles: true, isComposing: true }));
+      await fixture.whenStable();
+      expect(field().value).toBe('getsu');
+    });
+
+    it('ne renvoie pas le curseur à la fin quand on corrige au milieu du texte', async () => {
+      const { field, fixture } = await render();
+      field().value = 'getsuyoubi';
+      field().setSelectionRange(3, 3);
+      field().dispatchEvent(new Event('input', { bubbles: true }));
+      await fixture.whenStable();
+      expect(field().value).toBe('getsuyoubi');
+    });
+
+    it('n’y touche pas sur une question en français, et le dit seulement en japonais', async () => {
+      const { el, field, type, answer, next } = await render();
+      expect(el.textContent).toContain('Tape en rōmaji');
+      await answer('getsuyoubi');
+      await next();
+      expect(el.textContent).not.toContain('Tape en rōmaji');
+      await type('lundi');
+      expect(field().value).toBe('lundi');
+    });
+
+    it('repart d’un champ vide après chaque question', async () => {
+      const { field, type, answer, next } = await render(choudo);
+      await type('choudo');
+      expect(field().value).toBe('ちょうど');
+      await answer('choudo');
+      await next();
+      expect(field().value).toBe('');
+    });
   });
 
   it('passe à la question suivante, vide le champ et y remet le focus', async () => {
