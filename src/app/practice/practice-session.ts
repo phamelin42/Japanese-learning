@@ -37,12 +37,19 @@ export class PracticeSession {
     this.status.set(questions.length > 0 ? 'asking' : 'done');
   }
 
-  submit(input: string): void {
+  /**
+   * `input` est ce que le champ affiche (et ce qu'on rappelle après une faute). `typed` est le
+   * rōmaji réellement tapé quand le champ l'a transformé en kana : une graphie que le kana ne
+   * garde pas (« nn » pour ん, « wa » pour la particule は) reste ainsi acceptée.
+   */
+  submit(input: string, typed: string | null = null): void {
     const question = this.current();
     if (this.status() !== 'asking' || !question || input.trim() === '') return;
     this.lastInput.set(input);
-    if (checkAnswer(input, question.accepted, question.answerLang)) {
-      this.smallKanaSlip.set(hasSmallKanaSlip(input, question.accepted, question.answerLang));
+    const { accepted, answerLang } = question;
+    const rightAsTyped = typed !== null && checkAnswer(typed, accepted, answerLang);
+    if (rightAsTyped || checkAnswer(input, accepted, answerLang)) {
+      this.smallKanaSlip.set(!rightAsTyped && hasSmallKanaSlip(input, accepted, answerLang));
       this.status.set('right');
     } else {
       this.missed.update((missed) => new Set(missed).add(question.id));
