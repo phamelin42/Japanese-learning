@@ -1,7 +1,9 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FdThemeService } from '@phamelin/fuda';
+import { InstallPrompt } from '../../install/install-prompt';
 import { ProgressSync, SyncState } from '../../progress/progress-sync';
+import { SuccessSound } from '../../sound/success-sound';
 import { SettingsPage } from './settings';
 
 function fakeSync() {
@@ -14,13 +16,28 @@ function fakeSync() {
   };
 }
 
+function fakeInstall() {
+  return {
+    canInstall: signal(false),
+    installed: signal(false),
+    install: vi.fn(() => Promise.resolve()),
+  };
+}
+
 describe('SettingsPage', () => {
   let sync: ReturnType<typeof fakeSync>;
+  let install: ReturnType<typeof fakeInstall>;
 
   beforeEach(() => {
     localStorage.clear();
     sync = fakeSync();
-    TestBed.configureTestingModule({ providers: [{ provide: ProgressSync, useValue: sync }] });
+    install = fakeInstall();
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: ProgressSync, useValue: sync },
+        { provide: InstallPrompt, useValue: install },
+      ],
+    });
   });
   afterEach(() => document.documentElement.removeAttribute('data-theme'));
 
@@ -98,5 +115,47 @@ describe('SettingsPage', () => {
   it('ne propose d’oublier le code que s’il y en a un', async () => {
     const { button } = await render();
     expect(button('Oublier ce code sur cet appareil')).toBeUndefined();
+  });
+
+  it('coupe et rétablit le son de validation avec son interrupteur', async () => {
+    const { fixture, el } = await render();
+    const toggle = [...el.querySelectorAll<HTMLInputElement>('fd-switch input')].find((input) =>
+      input.closest('fd-switch')?.textContent?.includes('Son de validation'),
+    )!;
+    const sound = TestBed.inject(SuccessSound);
+    expect(toggle.checked).toBe(true);
+
+    toggle.click();
+    await fixture.whenStable();
+    expect(sound.enabled()).toBe(false);
+
+    toggle.click();
+    await fixture.whenStable();
+    expect(sound.enabled()).toBe(true);
+  });
+
+  describe('installation comme application', () => {
+    it('explique le geste à faire quand le navigateur ne propose pas de bouton', async () => {
+      const { el, button } = await render();
+      expect(button('Installer l’application')).toBeUndefined();
+      expect(el.textContent).toContain('Sur l’écran d’accueil');
+    });
+
+    it('affiche le bouton quand le navigateur propose l’installation, et le déclenche', async () => {
+      install.canInstall.set(true);
+      const { fixture, el, button } = await render();
+      expect(el.textContent).not.toContain('Sur l’écran d’accueil');
+      button('Installer l’application')!.click();
+      await fixture.whenStable();
+      expect(install.install).toHaveBeenCalledTimes(1);
+    });
+
+    it('dit que l’application est installée et n’offre plus de bouton', async () => {
+      install.installed.set(true);
+      install.canInstall.set(true);
+      const { el, button } = await render();
+      expect(el.textContent).toContain('L’application est installée sur cet appareil.');
+      expect(button('Installer l’application')).toBeUndefined();
+    });
   });
 });

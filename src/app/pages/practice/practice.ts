@@ -19,6 +19,7 @@ import { StudyModule } from '../../content/module.model';
 import { buildQuestions } from '../../practice/build-questions';
 import { PracticeSession } from '../../practice/practice-session';
 import { ProgressStore } from '../../progress/progress-store';
+import { SuccessSound } from '../../sound/success-sound';
 
 @Component({
   selector: 'app-practice-page',
@@ -33,6 +34,7 @@ export class PracticePage {
 
   protected readonly session = inject(PracticeSession);
   private readonly store = inject(ProgressStore);
+  private readonly sound = inject(SuccessSound);
   private readonly injector = inject(Injector);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -74,6 +76,7 @@ export class PracticePage {
       return;
     }
     this.session.submit(this.answerModel().answer);
+    if (this.session.status() === 'right') this.sound.play();
     if (this.answered()) this.afterRender(() => this.nextButton()?.nativeElement.focus());
   }
 

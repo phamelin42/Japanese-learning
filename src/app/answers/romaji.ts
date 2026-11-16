@@ -23,8 +23,8 @@ const SINGLE: Record<string, readonly string[]> = {
 /** Kana suivi d'une petite lettre : syllabes contractées et sons des mots d'emprunt. */
 // prettier-ignore
 const PAIRS: Record<string, readonly string[]> = {
-  しゃ: ['sha', 'sya'], しゅ: ['shu', 'syu'], しょ: ['sho', 'syo'], しぇ: ['she', 'sye'],
-  ちゃ: ['cha', 'tya', 'cya'], ちゅ: ['chu', 'tyu', 'cyu'], ちょ: ['cho', 'tyo', 'cyo'], ちぇ: ['che', 'tye'],
+  しゃ: ['sha', 'sya', 'shya'], しゅ: ['shu', 'syu', 'shyu'], しょ: ['sho', 'syo', 'shyo'], しぇ: ['she', 'sye'],
+  ちゃ: ['cha', 'tya', 'cya', 'chya'], ちゅ: ['chu', 'tyu', 'cyu', 'chyu'], ちょ: ['cho', 'tyo', 'cyo', 'chyo'], ちぇ: ['che', 'tye'],
   じゃ: ['ja', 'zya', 'jya'], じゅ: ['ju', 'zyu', 'jyu'], じょ: ['jo', 'zyo', 'jyo'], じぇ: ['je', 'zye', 'jye'],
   ぢゃ: ['ja', 'dya'], ぢゅ: ['ju', 'dyu'], ぢょ: ['jo', 'dyo'],
   ふぁ: ['fa'], ふぃ: ['fi'], ふぇ: ['fe'], ふぉ: ['fo'],

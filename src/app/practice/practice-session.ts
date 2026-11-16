@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { checkAnswer } from '../answers/check-answer';
+import { checkAnswer, hasSmallKanaSlip } from '../answers/check-answer';
 import { RANDOM } from '../random';
 import { Question } from './question';
 
@@ -19,6 +19,8 @@ export class PracticeSession {
 
   readonly status = signal<PracticeStatus>('done');
   readonly lastInput = signal('');
+  /** Bonne réponse, mais un petit kana (ゃ ゅ ょ っ) a été tapé en taille normale. */
+  readonly smallKanaSlip = signal(false);
   readonly current = computed(() => (this.status() === 'done' ? null : (this.queue()[0] ?? null)));
   readonly remaining = computed(() => this.queue().length);
   readonly firstTryScore = computed(() => ({
@@ -31,6 +33,7 @@ export class PracticeSession {
     this.missed.set(new Set());
     this.total.set(questions.length);
     this.lastInput.set('');
+    this.smallKanaSlip.set(false);
     this.status.set(questions.length > 0 ? 'asking' : 'done');
   }
 
@@ -39,6 +42,7 @@ export class PracticeSession {
     if (this.status() !== 'asking' || !question || input.trim() === '') return;
     this.lastInput.set(input);
     if (checkAnswer(input, question.accepted, question.answerLang)) {
+      this.smallKanaSlip.set(hasSmallKanaSlip(input, question.accepted, question.answerLang));
       this.status.set('right');
     } else {
       this.missed.update((missed) => new Set(missed).add(question.id));
@@ -53,6 +57,7 @@ export class PracticeSession {
     const queue = status === 'wrong' ? [...rest, answered] : rest;
     this.queue.set(queue);
     this.lastInput.set('');
+    this.smallKanaSlip.set(false);
     this.status.set(queue.length > 0 ? 'asking' : 'done');
   }
 

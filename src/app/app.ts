@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { InstallPrompt } from './install/install-prompt';
 import { ProgressSync } from './progress/progress-sync';
 import { SITE_NAME } from './seo/page-title-strategy';
 
@@ -24,6 +25,8 @@ export class App {
   constructor() {
     const root = inject(DOCUMENT).documentElement;
     const sync = inject(ProgressSync);
+    // Créé tout de suite : le navigateur n'annonce qu'une fois que l'installation est possible.
+    inject(InstallPrompt);
     const appRef = inject(ApplicationRef);
     afterNextRender(() => {
       sync.start();

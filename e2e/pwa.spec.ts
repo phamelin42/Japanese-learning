@@ -1,4 +1,5 @@
 import { expect, test, type APIRequestContext } from '@playwright/test';
+import { expectNoAxeViolations, openPage } from './helpers';
 
 interface ManifestIcon {
   src: string;
@@ -75,4 +76,44 @@ test('le manifeste fournit les icônes exigées par Chrome et Android', async ({
   expect(has('192x192', 'any')).toBe(true);
   expect(has('512x512', 'any')).toBe(true);
   expect(has('512x512', 'maskable')).toBe(true);
+});
+
+test('Chromium ne voit aucun obstacle à l’installation de l’application', async ({ page }) => {
+  await openPage(page, '/');
+  const session = await page.context().newCDPSession(page);
+  const { installabilityErrors } = (await session.send('Page.getInstallabilityErrors')) as {
+    installabilityErrors: { errorId: string }[];
+  };
+  // Playwright ouvre une fenêtre privée, où Chromium n'installe jamais : seul « in-incognito »
+  // est attendu, tout autre obstacle (manifeste, icône, scope) vient du site.
+  expect(
+    installabilityErrors.map((error) => error.errorId).filter((id) => id !== 'in-incognito'),
+  ).toEqual([]);
+});
+
+test('Réglages offre le bouton d’installation quand le navigateur la propose', async ({ page }) => {
+  await openPage(page, '/reglages');
+  const install = page.getByRole('button', { name: 'Installer l’application', exact: true });
+  await expect(install).toHaveCount(0);
+  await expect(page.getByText('Sur l’écran d’accueil')).toBeVisible();
+
+  // Chrome annonce l'installation par cet événement (absent du Chromium sans profil installable).
+  await page.evaluate(() => {
+    const event = Object.assign(new Event('beforeinstallprompt', { cancelable: true }), {
+      prompt: () => {
+        (window as unknown as { installPrompted: boolean }).installPrompted = true;
+        return Promise.resolve();
+      },
+      userChoice: Promise.resolve({ outcome: 'dismissed' }),
+    });
+    window.dispatchEvent(event);
+  });
+  await expect(install).toBeVisible();
+  await expectNoAxeViolations(page);
+
+  await install.click();
+  await expect(install).toHaveCount(0);
+  expect(
+    await page.evaluate(() => (window as unknown as { installPrompted?: boolean }).installPrompted),
+  ).toBe(true);
 });

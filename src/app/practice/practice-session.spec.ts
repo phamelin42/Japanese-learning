@@ -140,4 +140,41 @@ describe('PracticeSession', () => {
     s.start([]);
     expect(s.status()).toBe('done');
   });
+
+  it('valide un petit kana tapé en taille normale et le signale jusqu’à « Suivant »', () => {
+    const s = session();
+    s.start([
+      {
+        id: 'choudo',
+        prompt: 'exactement',
+        promptLang: 'fr',
+        accepted: ['ちょうど'],
+        answerLang: 'ja',
+        expected: 'ちょうど',
+      },
+      question('b', 'deux'),
+    ]);
+    s.submit('ちようど');
+    expect(s.status()).toBe('right');
+    expect(s.smallKanaSlip()).toBe(true);
+    s.next();
+    expect(s.smallKanaSlip()).toBe(false);
+  });
+
+  it('ne signale rien pour une réponse exacte', () => {
+    const s = session();
+    s.start([
+      {
+        id: 'choudo',
+        prompt: 'exactement',
+        promptLang: 'fr',
+        accepted: ['ちょうど'],
+        answerLang: 'ja',
+        expected: 'ちょうど',
+      },
+    ]);
+    s.submit('ちょうど');
+    expect(s.status()).toBe('right');
+    expect(s.smallKanaSlip()).toBe(false);
+  });
 });
