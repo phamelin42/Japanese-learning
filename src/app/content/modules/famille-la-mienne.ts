@@ -1,0 +1,85 @@
+import { StudyModule } from '../module.model';
+
+const module: StudyModule = {
+  id: 'famille-la-mienne',
+  title: 'Ma famille',
+  kind: 'vocabulaire',
+  lessonDate: '2026-11-19',
+  summary: 'Parler de sa propre famille : ちち, はは, あに, あね, おとうと, いもうと…',
+  vocabulary: [
+    { id: 'kazoku', fr: 'ma famille', frAlternatives: ['famille'], kana: 'かぞく', kanji: '家族' },
+    {
+      id: 'sofu',
+      fr: 'mon grand-père',
+      frAlternatives: ['grand-père'],
+      kana: 'そふ',
+      kanji: '祖父',
+    },
+    {
+      id: 'sobo',
+      fr: 'ma grand-mère',
+      frAlternatives: ['grand-mère'],
+      kana: 'そぼ',
+      kanji: '祖母',
+    },
+    {
+      id: 'oya',
+      fr: 'mes parents',
+      frAlternatives: ['parents'],
+      kana: 'おや',
+      kanji: '親',
+      note: 'On dit aussi りょうしん (両親), plus soigné.',
+    },
+    { id: 'chichi', fr: 'mon père', frAlternatives: ['père'], kana: 'ちち', kanji: '父' },
+    { id: 'haha', fr: 'ma mère', frAlternatives: ['mère'], kana: 'はは', kanji: '母' },
+    {
+      id: 'ani',
+      fr: 'mon grand frère',
+      frAlternatives: ['grand frère', 'frère aîné'],
+      kana: 'あに',
+      kanji: '兄',
+    },
+    {
+      id: 'ane',
+      fr: 'ma grande sœur',
+      frAlternatives: ['grande sœur', 'ma grande soeur', 'grande soeur', 'sœur aînée'],
+      kana: 'あね',
+      kanji: '姉',
+    },
+    {
+      id: 'otouto',
+      fr: 'mon petit frère',
+      frAlternatives: ['petit frère', 'frère cadet'],
+      kana: 'おとうと',
+      kanji: '弟',
+    },
+    {
+      id: 'imouto',
+      fr: 'ma petite sœur',
+      frAlternatives: ['petite sœur', 'ma petite soeur', 'petite soeur', 'sœur cadette'],
+      kana: 'いもうと',
+      kanji: '妹',
+    },
+    { id: 'oji', fr: 'mon oncle', frAlternatives: ['oncle'], kana: 'おじ' },
+    { id: 'oba', fr: 'ma tante', frAlternatives: ['tante'], kana: 'おば' },
+    { id: 'musuko', fr: 'mon fils', frAlternatives: ['fils'], kana: 'むすこ', kanji: '息子' },
+    { id: 'musume', fr: 'ma fille', frAlternatives: ['fille'], kana: 'むすめ', kanji: '娘' },
+    {
+      id: 'kodomo',
+      fr: 'mon enfant',
+      frAlternatives: ['enfant', 'enfants', 'mes enfants'],
+      kana: 'こども',
+      kanji: '子ども',
+    },
+    { id: 'otto', fr: 'mon mari', frAlternatives: ['mari'], kana: 'おっと', kanji: '夫' },
+    {
+      id: 'tsuma',
+      fr: 'ma femme',
+      frAlternatives: ['mon épouse', 'femme', 'épouse'],
+      kana: 'つま',
+      kanji: '妻',
+    },
+  ],
+};
+
+export default module;

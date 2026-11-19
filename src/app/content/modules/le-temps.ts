@@ -20,6 +20,13 @@ const module: StudyModule = {
     { id: 'senshuu', fr: 'semaine dernière', kana: 'せんしゅう' },
     { id: 'raishuu', fr: 'semaine prochaine', kana: 'らいしゅう' },
     { id: 'rainen', fr: 'année prochaine', frAlternatives: ['l’an prochain'], kana: 'らいねん' },
+    {
+      id: 'kyonen',
+      fr: 'année dernière',
+      frAlternatives: ['l’an dernier', 'l’année passée'],
+      kana: 'きょねん',
+      kanji: '去年',
+    },
   ],
 };
 

@@ -36,6 +36,8 @@ publie à la fusion. Le skill `.claude/skills/integrer-cours` suit ce document.
      exemples avec kana et traduction) et **6 à 12 exercices** (phrase à trou « ＿＿ » ou à
      traduire), chacun avec toutes les réponses acceptables (dont une en kana quand on répond en
      japonais, sinon le rōmaji ne passe pas) et une explication ;
+     une phrase japonaise s’écrit **sans espace** dans `answers` (le rōmaji refuse les espaces ;
+     la correction les ignore, `ちちに おかねを` reste juste) ;
    - `id` en kebab-case, **jamais renommés** une fois publiés (la progression s’y rattache) ;
    - le fichier `modules/<id>.ts` et son entrée dans `modules/index.ts`, décrits à l’identique.
 4. **Vérifier** : `npm test` (le contrôle du contenu refuse kana invalides, doublons, dates
