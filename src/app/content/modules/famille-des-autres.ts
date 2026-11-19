@@ -1,0 +1,117 @@
+import { StudyModule } from '../module.model';
+
+const module: StudyModule = {
+  id: 'famille-des-autres',
+  title: 'La famille des autres',
+  kind: 'vocabulaire',
+  lessonDate: '2026-11-19',
+  summary: 'Parler de la famille de quelqu’un d’autre : おとうさん, おかあさん, おにいさん…',
+  vocabulary: [
+    {
+      id: 'gokazoku',
+      fr: 'votre famille',
+      frAlternatives: ['sa famille', 'famille'],
+      kana: 'ごかぞく',
+      kanji: 'ご家族',
+    },
+    {
+      id: 'ojiisan',
+      fr: 'votre grand-père',
+      frAlternatives: ['son grand-père', 'grand-père'],
+      kana: 'おじいさん',
+      note: 'Voyelle longue : おじいさん (grand-père) n’est pas おじさん (oncle).',
+    },
+    {
+      id: 'obaasan',
+      fr: 'votre grand-mère',
+      frAlternatives: ['sa grand-mère', 'grand-mère'],
+      kana: 'おばあさん',
+      note: 'Voyelle longue : おばあさん (grand-mère) n’est pas おばさん (tante).',
+    },
+    {
+      id: 'goryoushin',
+      fr: 'vos parents',
+      frAlternatives: ['ses parents', 'parents'],
+      kana: 'ごりょうしん',
+      kanji: 'ご両親',
+    },
+    {
+      id: 'otousan',
+      fr: 'votre père',
+      frAlternatives: ['son père', 'père'],
+      kana: 'おとうさん',
+      kanji: 'お父さん',
+    },
+    {
+      id: 'okaasan',
+      fr: 'votre mère',
+      frAlternatives: ['sa mère', 'mère'],
+      kana: 'おかあさん',
+      kanji: 'お母さん',
+    },
+    {
+      id: 'oniisan',
+      fr: 'votre grand frère',
+      frAlternatives: ['son grand frère', 'grand frère'],
+      kana: 'おにいさん',
+      kanji: 'お兄さん',
+    },
+    {
+      id: 'oneesan',
+      fr: 'votre grande sœur',
+      frAlternatives: ['sa grande sœur', 'votre grande soeur', 'grande sœur', 'grande soeur'],
+      kana: 'おねえさん',
+      kanji: 'お姉さん',
+    },
+    {
+      id: 'otoutosan',
+      fr: 'votre petit frère',
+      frAlternatives: ['son petit frère', 'petit frère'],
+      kana: 'おとうとさん',
+    },
+    {
+      id: 'imoutosan',
+      fr: 'votre petite sœur',
+      frAlternatives: ['sa petite sœur', 'votre petite soeur', 'petite sœur', 'petite soeur'],
+      kana: 'いもうとさん',
+    },
+    { id: 'ojisan', fr: 'votre oncle', frAlternatives: ['son oncle', 'oncle'], kana: 'おじさん' },
+    { id: 'obasan', fr: 'votre tante', frAlternatives: ['sa tante', 'tante'], kana: 'おばさん' },
+    {
+      id: 'musukosan',
+      fr: 'votre fils',
+      frAlternatives: ['son fils', 'fils'],
+      kana: 'むすこさん',
+    },
+    {
+      id: 'musumesan',
+      fr: 'votre fille',
+      frAlternatives: ['sa fille', 'fille'],
+      kana: 'むすめさん',
+      note: 'Plus poli encore : おじょうさん.',
+    },
+    {
+      id: 'okosan',
+      fr: 'votre enfant',
+      frAlternatives: ['son enfant', 'vos enfants', 'enfant'],
+      kana: 'おこさん',
+      kanji: 'お子さん',
+    },
+    {
+      id: 'goshujin',
+      fr: 'votre mari',
+      frAlternatives: ['son mari', 'mari'],
+      kana: 'ごしゅじん',
+      kanji: 'ご主人',
+    },
+    {
+      id: 'okusan',
+      fr: 'votre femme',
+      frAlternatives: ['sa femme', 'votre épouse', 'femme', 'épouse'],
+      kana: 'おくさん',
+      kanji: '奥さん',
+    },
+  ],
+};
+
+export default module;
